@@ -16,6 +16,7 @@
     <br>
     <label for="cannon-tower">Cannon Tower</label>
     <input type="radio" id="cannon-tower" name="tower_select" value="4" />
+    <button id="Upgrade" type='button'>Upgrade Tower</button>
   </div>
   <div id="items">
     <h3>Your Items</h3>
