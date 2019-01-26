@@ -1,0 +1,40 @@
+$primary: #6699CC;
+$secondary: #FF8C42;
+$primary-font: #FFF275;
+* {
+	box-sizing: border-box;
+}
+
+body{
+	padding:0;
+	margin:0;
+	background-color: $secondary;
+	font-family: 'VT323', monospace;
+
+	main{
+		&#index{
+			min-height: 100vh;
+			display: flex;
+			justify-content: center;
+			.titleDiv{
+				display: flex;
+				background-color: $primary;
+				margin: auto;
+				justify-content: center;
+				text-align: center;
+				height: 85vh;
+				width: 80vw;
+				align-items: center;
+				&__title{
+					margin: 0;
+					font-size: 5em;
+					color: $primary-font;
+
+				}
+				&__button{
+					margin-top: 3em;
+				}
+			}
+		}
+	}
+}
