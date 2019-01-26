@@ -9,26 +9,34 @@
 <body>
   <main id="main">
     <div id="test"></div>
-    <div class="page-wrapper">
-      <div id="tower-select">
-        <form name="user_menu">
+    <div class="page-wrapper flex-container">
+      <form id="game-panel" name="game_panel">
+        <h2>Game Panel</h2>
+        <div id="tower-select">
+          <h3>Towers</h3>
           <label for="nothing">Nothing</label>
           <input type="radio" id="nothing" name="tower_select" value="0" checked />
-          <label for="basic-tower">Basic</label>
-          <input type="radio" id="basic-tower" name="tower_select" value="1" />
-          <label for="strong-tower">So Stronk</label>
-          <input type="radio" id="strong-tower" name="tower_select" value="2" />
-        </form>
-            <?php
-                if (isset($genderError)) {
-                    echo $genderError;
-                }
-            ?>
-        </span>
-      </div>
+          <br>
+          <label for="arrow-tower">Arrow Tower</label>
+          <input type="radio" id="arrow-tower" name="tower_select" value="1" />
+          <br>
+          <label for="laser-tower">Laser Tower</label>
+          <input type="radio" id="laser-tower" name="tower_select" value="2" />
+          <br>
+          <label for="artillery-tower">Artillery Tower</label>
+          <input type="radio" id="artillery-tower" name="tower_select" value="3" />
+          <br>
+          <label for="cannon-tower">Cannon Tower</label>
+          <input type="radio" id="cannon-tower" name="tower_select" value="4" />
+        </div>
+        <div id="items">
+          <h3>Your Items</h3>
+        </div>
+      </form>
       <canvas id="game-canvas" width="1000" height="600">
         Your browser does not support the HTML5 canvas tag.
       </canvas>
+
     </div>
   </main>
   

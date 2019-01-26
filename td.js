@@ -9,75 +9,72 @@ function pageInit() {
         yPos: 0
     };
     var wave = [];
-    var userMenu = document.forms.user_menu;
+    var gamePanel = document.forms.game_panel;
+    var refreshCount = 1;
 
-    // Constructor function for a tower
-    function BasicTower(xStart, yStart, power) {
+    function ArrowTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
-        this.power = power;
+        this.power = 1;
+        this.isAttacking = false;
+        this.spdCount = 5;
+        this.delay = 5;
 
         this.redraw = function() {
-            gameContext.beginPath();
-            gameContext.strokeStyle = "#000";
-
-            // Head
-            gameContext.moveTo(this.xStart + 25, this.yStart);
-            gameContext.arc(this.xStart, this.yStart, 25, 0, Math.PI * 2, true);
-
-            // Mouth
-            gameContext.moveTo(this.xStart + 15, this.yStart);
-            gameContext.arc(this.xStart, this.yStart, 15, 0, Math.PI, false);
-
-            // Left Eye
-            gameContext.moveTo(this.xStart - 5, this.yStart - 10);
-            gameContext.arc(this.xStart - 10, this.yStart - 10, 5, 0, 
-                Math.PI * 2, false);
-
-            // Right Eye
-            gameContext.moveTo(this.xStart + 15, this.yStart - 10);
-            gameContext.arc(this.xStart + 10, this.yStart - 10, 5, 0, 
-                Math.PI * 2, false);
-
-            gameContext.stroke();
-            gameContext.closePath();
+            gameContext.fillStyle = "blue";
+            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
         }
 
         this.attack = function() {
-            for (let i = 0; i < towerList.length; i++) {
-                for (let j = 0; j < wave.length; j++) {
-                    let xDist = Math.abs(wave[j].xPos - towerList[i].xStart);
-                    let yDist = Math.abs(wave[j].yPos - towerList[i].yStart);
+            this.isAttacking = false;
+            if (this.spdCount === this.delay + 10){
+                this.spdCount = 0;
+            }
+            this.spdCount++;
+            for (let j = 0; j < wave.length; j++) {
+                if (this.isAttacking === false && this.spdCount > this.delay) {
+                    let xDist = Math.abs(wave[j].xPos - this.xStart);
+                    let yDist = Math.abs(wave[j].yPos - this.yStart);
                     if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < 200) {
-                        this.lazer(i, j);
-                        wave[j].hp -= this.power;
-                        if (wave[j].hp <= 0) {
-                            if (j === 0) {
-                                wave.splice(0, 1);
-                            }
-                            else {
-                                wave.splice(j, j);
-                            }
+                        this.arrow(j);
+                        if (this.spdCount === this.delay + 10) {
+                            wave[j].hp -= this.power;
                         }
+                        if (wave[j].hp <= 0) {
+                            wave.splice(j, 1);
+                        }
+                        this.isAttacking = true;
                     }
+                    else {
+                        this.isAttacking = false;
+                    } 
                 }
             }
         }
 
-        this.lazer = function(towerIndex, enemyIndex) {
+        this.arrow = function(enemyIndex) {
+            let centerX = this.xStart + 25;
+            let centerY = this.yStart + 25;
+            let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
+            let yOffset = ((wave[enemyIndex].yPos + 15) - (centerY)) / 10;
+
             gameContext.beginPath();
-            gameContext.strokeStyle = "blue";
-            gameContext.moveTo(towerList[towerIndex].xStart, towerList[towerIndex].yStart);
-            gameContext.lineTo(wave[enemyIndex].xPos + 25, wave[enemyIndex].yPos + 15);
-            gameContext.stroke();
+            gameContext.moveTo(centerX + xOffset * (this.spdCount - this.delay), 
+                centerY + yOffset * (this.spdCount - this.delay));
+            gameContext.arc(centerX + xOffset * (this.spdCount - this.delay), 
+                centerY + yOffset * (this.spdCount - this.delay), 
+                5, 0, 2 * Math.PI, false);
+            gameContext.fillStyle = 'green';
+            gameContext.fill();
             gameContext.closePath();
         }
     }
 
-    function StrongTower(xStart, yStart, power) {
+    function LaserTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
-        this.power = power;
+        this.power = 5;
+        this.isAttacking = false;
 
         this.redraw = function() {
             gameContext.fillStyle = "orange";
@@ -85,32 +82,163 @@ function pageInit() {
         }
 
         this.attack = function() {
-            for (let i = 0; i < towerList.length; i++) {
-                for (let j = 0; j < wave.length; j++) {
-                    let xDist = Math.abs(wave[j].xPos - towerList[i].xStart);
-                    let yDist = Math.abs(wave[j].yPos - towerList[i].yStart);
+            this.isAttacking = false;
+            for (let j = 0; j < wave.length; j++) {
+                if (this.isAttacking === false) {
+                    let xDist = Math.abs(wave[j].xPos - this.xStart);
+                    let yDist = Math.abs(wave[j].yPos - this.yStart);
                     if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < 200) {
-                        this.lazer(i, j);
+                        this.laser(j);
                         wave[j].hp -= this.power;
                         if (wave[j].hp <= 0) {
-                            if (j === 0) {
-                                wave.splice(0, 1);
-                            }
-                            else {
-                                wave.splice(j, j);
-                            }
+                            wave.splice(j, 1);
                         }
+                        this.isAttacking = true;
+                    }
+                    else {
+                        this.isAttacking = false;
                     }
                 }
             }
         }
 
-        this.lazer = function(towerIndex, enemyIndex) {
+        this.laser = function(enemyIndex) {
             gameContext.beginPath();
-            gameContext.strokeStyle = "pink";
-            gameContext.moveTo(towerList[towerIndex].xStart, towerList[towerIndex].yStart);
+            gameContext.strokeStyle = "red";
+            gameContext.moveTo(this.xStart + 25, this.yStart + 25);
             gameContext.lineTo(wave[enemyIndex].xPos + 25, wave[enemyIndex].yPos + 15);
             gameContext.stroke();
+            gameContext.closePath();
+        }
+    }
+
+    function ArtilleryTower(xStart, yStart) {
+        this.xStart = xStart;
+        this.yStart = yStart;
+        this.power = 200;
+        this.isAttacking = false;
+        this.spdCount = 50;
+        this.delay = 50;
+
+        this.redraw = function() {
+            gameContext.fillStyle = "purple";
+            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
+        }
+
+        this.attack = function() {
+            this.isAttacking = false;
+            if (this.spdCount === this.delay + 10){
+                this.spdCount = 0;
+            }
+            this.spdCount++;
+            for (let j = 0; j < wave.length; j++) {
+                if (this.isAttacking === false && this.spdCount > this.delay) {
+                    let xDist = Math.abs(wave[j].xPos - this.xStart);
+                    let yDist = Math.abs(wave[j].yPos - this.yStart);
+                    if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < 200) {
+                        this.boom(j);
+                        if (this.spdCount === this.delay + 10) {
+                            for (let k = 0; k < wave.length; k++) {
+                                let xProx = Math.abs(wave[j].xPos - wave[k].xPos);
+                                let yProx = Math.abs(wave[j].yPos - wave[k].yPos);
+
+                                if (Math.sqrt(Math.pow(xProx, 2) + Math.pow(yProx, 2)) < 75) {
+                                    if (k === j) {
+                                        wave[k].hp -= this.power;
+                                    }
+                                    else {
+                                        wave[k].hp -= this.power / 2;
+                                    }
+                                }
+                            }
+                        }
+                        this.isAttacking = true;
+                    }
+                    else {
+                        this.isAttacking = false;
+                    }
+                }
+            }
+            for (let i = 0; i < wave.length; i++) {
+                if (wave[i].hp <= 0) {
+                    wave.splice(i, 1);
+                }
+            }
+        }
+
+        this.boom = function(enemyIndex) {
+            let centerX = this.xStart + 25;
+            let centerY = this.yStart + 25;
+            let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
+            let yOffset = ((wave[enemyIndex].yPos + 15) - (centerY)) / 10;
+
+            gameContext.beginPath();
+            gameContext.moveTo(centerX + xOffset * (this.spdCount - this.delay), 
+                centerY + yOffset * (this.spdCount - this.delay));
+            gameContext.arc(centerX + xOffset * (this.spdCount - this.delay), 
+                centerY + yOffset * (this.spdCount - this.delay), 
+                20, 0, 2 * Math.PI, false);
+            gameContext.fillStyle = 'pink';
+            gameContext.fill();
+            gameContext.closePath();
+        }
+    }
+
+    function CannonTower(xStart, yStart) {
+        this.xStart = xStart;
+        this.yStart = yStart;
+        this.power = 100;
+        this.isAttacking = false;
+        this.spdCount = 25;
+        this.delay = 25;
+
+        this.redraw = function() {
+            gameContext.fillStyle = "yellow";
+            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
+        }
+
+        this.attack = function() {
+            this.isAttacking = false;
+            if (this.spdCount === this.delay + 10){
+                this.spdCount = 0;
+            }
+            this.spdCount++;
+            for (let j = 0; j < wave.length; j++) {
+                if (this.isAttacking === false && this.spdCount > this.delay) {
+                    let xDist = Math.abs(wave[j].xPos - this.xStart);
+                    let yDist = Math.abs(wave[j].yPos - this.yStart);
+                    if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < 200) {
+                        this.cannon(j);
+                        if (this.spdCount === this.delay + 10) {
+                            wave[j].hp -= this.power;
+                        }
+                        if (wave[j].hp <= 0) {
+                            wave.splice(j, 1);
+                            this.isAttacking = false;
+                        }
+                        this.isAttacking = true;
+                    }
+                    else {
+                        this.isAttacking = false;
+                    } 
+                }
+            }
+        }
+
+        this.cannon = function(enemyIndex) {
+            let centerX = this.xStart + 25;
+            let centerY = this.yStart + 25;
+            let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
+            let yOffset = ((wave[enemyIndex].yPos + 15) - (centerY)) / 10;
+
+            gameContext.beginPath();
+            gameContext.moveTo(centerX + xOffset * (this.spdCount - this.delay), 
+                centerY + yOffset * (this.spdCount - this.delay));
+            gameContext.arc(centerX + xOffset * (this.spdCount - this.delay), 
+                centerY + yOffset * (this.spdCount - this.delay), 
+                10, 0, 2 * Math.PI, false);
+            gameContext.fillStyle = 'black';
+            gameContext.fill();
             gameContext.closePath();
         }
     }
@@ -174,34 +302,50 @@ function pageInit() {
         drawGrid();
 
         // Redraw Wave
-        for (let i = 0; i < wave.length; i++) {
-            if (wave[i].yPos < gameCanvas.height - 50) {
-                wave[i].redraw();
-            }
-            else {
-                wave.shift();
+        if (true) {
+            for (let i = 0; i < wave.length; i++) {
+                if (wave[i].yPos < gameCanvas.height - 50) {
+                    wave[i].redraw();
+                }
+                else {
+                    wave.shift();
+                }
             }
         }
 
         // Redraw Towers
         for (let i = 0; i < towerList.length; i++) {
             towerList[i].redraw();
+        }
+
+        // Redraw attack animations after tower so they overlap the towers
+        for (let i = 0; i < towerList.length; i++) {
             towerList[i].attack();
+        }
+
+        refreshCount++;
+        if (refreshCount === 11) {
+            refreshCount = 1;
         }
     }
 
     function createTower() {
         if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) {
-            if (userMenu.tower_select.value === "1") {
-                var newTower = new BasicTower(currSquare.xPos + 25, currSquare.yPos + 25, 1);
+            var newTower;
+            if (gamePanel.tower_select.value === "1") {
+                newTower = new ArrowTower(currSquare.xPos, currSquare.yPos);
+            }
+            else if (gamePanel.tower_select.value === "2") {
+                newTower = new LaserTower(currSquare.xPos, currSquare.yPos);
+            }
+            else if (gamePanel.tower_select.value === "3") {
+                newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
+            }
+            else if (gamePanel.tower_select.value === "4") {
+                newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
+            }
                 towerList.push(newTower);
                 occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
-            }
-            else if (userMenu.tower_select.value === "2") {
-                var newTower = new StrongTower(currSquare.xPos, currSquare.yPos, 5);
-                towerList.push(newTower);
-                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
-            }
         }
     }
 
@@ -210,17 +354,15 @@ function pageInit() {
         var enemyImg = new Image();
         enemyImg.src = "images/lolface2.png";
 
-        for (let i = 0; i < 10 ; i++) {
+        for (let i = 0; i < 20 ; i++) {
             setTimeout(function () {
-                wave.push(new Enemy(300, 0, 25, 5, enemyImg));
+                wave.push(new Enemy(300, 0, 100, 2, enemyImg));
             }, waveDelay);
-            waveDelay += 2000;
+            waveDelay += 500;
         }
     }
 
-    gameCanvas.onclick = function (e) {
-        createTower();
-    };
+    gameCanvas.onclick = createTower;
 
     // When the mouse moves within the canvas this function will update the
     // currSquare object to correspond to the box the mouse is in
@@ -237,7 +379,7 @@ function pageInit() {
 
     spawnWave();
     initOccupiedSpots();
-    var updateInterval = setInterval(updateCanvas, 100);
+    var updateInterval = setInterval(updateCanvas, 50);
 }
 
 window.onload = pageInit;
