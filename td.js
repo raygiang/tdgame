@@ -8,6 +8,8 @@ function pageInit() {
     const lifeHeader = document.getElementById("life");
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
+    // const radio = document.getElementsByName("tower_select");
+    // const towerImg = document.getElementsByClassName("tower_img");
 
     var towerList = [];
     var occupiedSpots = [];
@@ -29,6 +31,27 @@ function pageInit() {
     var money = 1000;
     var refreshCount = 1;
 
+    // function radioClick() {
+    //     for (var i = 0; i < radio.length; i++) {
+    //         if (radio[i] === this) {
+    //             if (towerImg[i].classList.contains('active')) {
+    //                 radio[i].checked = false;
+    //                 towerImg[i].classList.remove("active");
+    //             }
+    //         }
+    //     }
+    // }
+
+    // function radioChange() {
+    //     for (var i = 0; i < radio.length; i++) {
+    //         if (radio[i] === this) {
+    //             towerImg[i].classList.add("active");
+    //         } else {
+    //             towerImg[i].classList.remove("active");
+    //         }
+    //     }
+    // }
+
     function ArrowTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
@@ -41,7 +64,12 @@ function pageInit() {
         this.redraw = function() {
             var arrowTower = new Image();
             arrowTower.src = "images/siegeBallista.png";
-            gameContext.drawImage(arrowTower, this.xStart, this.yStart, 50, 50);
+            gameContext.save();
+            gameContext.translate(this.xStart + 100, this.yStart + 100);
+            gameContext.rotate(Math.PI);
+            gameContext.drawImage(arrowTower, -this.xStart, -this.yStart, 50, 50);
+
+            gameContext.restore();
         }
 
         this.attack = function() {
@@ -450,6 +478,11 @@ function pageInit() {
             yPos: ySquareNum * 50
         };
     };
+
+    // for (var i = 0; i < radio.length; i++) {
+    //     radio[i].onchange = radioChange;
+    //     radio[i].onclick = radioClick;
+    // }
 
     spawnWave();
     upgradeButton.style.display = "none";
