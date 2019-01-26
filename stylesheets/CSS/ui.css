@@ -10,7 +10,8 @@ ul {
 .header {
   font-size: 2em;
   width: 100%;
-  background-color: orange;
+  background-color: #1C1F33;
+  color: #FF5E5B;
   padding: 0.5em;
 }
 .header__list {
@@ -23,7 +24,8 @@ ul {
 .footer {
   font-size: 2em;
   max-width: 100%;
-  background-color: orange;
+  background-color: #1C1F33;
+  color: #FF5E5B;
   position: absolute;
   bottom: 0;
   left: 0;

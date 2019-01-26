@@ -12,7 +12,6 @@
   <?php include('inc/headerUI.php')?>
 
   <main id="main">
-    <?php include('inc/db.php');?>
     <div id="test"></div>
     <div class="page-wrapper flex-container">
       <canvas id="game-canvas" width="1000" height="600">
@@ -23,5 +22,6 @@
   </main>
   <?php include('inc/footerUI.php')?>  
   <script src="td.js" ></script>
+  <script src="gamePanel.js"></script>
 </body>
 </html>

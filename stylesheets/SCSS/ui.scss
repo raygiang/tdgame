@@ -1,3 +1,6 @@
+$uiBG: #1C1F33;
+$uiFont: #FF5E5B;
+
 body {
 	font-family: 'VT323', monospace;
 
@@ -11,8 +14,8 @@ ul{
 .header {
 	font-size: 2em;
 	width: 100%;
-	background-color: orange;
-	// height: 4em;
+	background-color: $uiBG;
+	color: $uiFont;
 	padding: 0.5em;
 	&__list{
 		display: flex;
@@ -25,8 +28,8 @@ ul{
 .footer {
 	font-size: 2em;
 	max-width: 100%;
-	background-color: orange;
-	// height: 4.5em;
+	background-color: $uiBG;
+	color: $uiFont;
 	position: absolute;
 	bottom: 0;
 	left: 0;
