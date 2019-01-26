@@ -346,21 +346,27 @@ function pageInit() {
             if (gamePanel.tower_select.value === "1" && money >= 50) {
                 money -= 50;
                 newTower = new ArrowTower(currSquare.xPos, currSquare.yPos);
+                towerList.push(newTower);
+                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
             }
             else if (gamePanel.tower_select.value === "2" && money >= 750) {
                 money -= 750;
                 newTower = new LaserTower(currSquare.xPos, currSquare.yPos);
+                towerList.push(newTower);
+                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
             }
             else if (gamePanel.tower_select.value === "3" && money >= 500) {
                 money -= 500;
                 newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
+                towerList.push(newTower);
+                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
             }
             else if (gamePanel.tower_select.value === "4" && money >= 250) {
                 money -= 250;
                 newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
-            }
                 towerList.push(newTower);
                 occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
+            }
         }
     }
 
