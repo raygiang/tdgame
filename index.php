@@ -32,10 +32,10 @@
 
                 <!-- NAME INPUT -->
                 <input type="text" class="formDiv__nameInput" id="formDiv__nameInput" name="playerName">
-                
+
                 <div>
                   <button type="button" class="button btn-secondary" data-dismiss="modal">Cancel</button>
-                  <button type="submit" class="formDiv__button" id="formDiv__button" name="playGame">Defend Your Home</button>
+                  <button type="submit" class="formDiv__button" id="formDiv__button" name="submit_button">Defend Your Home</button>
                 </div>
               </div>
             </div>
@@ -44,16 +44,18 @@
       </div>
     </div>
     <?
-    if(isset($_POST["playGame"]))
+    if(isset($_POST["submit_button"]))
     {
       $insertStmt = $conn->prepare("INSERT INTO player VALUES (DEFAULT, :player_name)");
       $player = $_POST['playerName'];
       filter_var($player, FILTER_SANITIZE_SPECIAL_CHARS);
       $insertStmt->bindParam(':player_name', $player);
-
+      // $currentPlayer = $conn->lastInsertId();
       try 
       {
         $insertStmt->execute();
+        header("Location: td.php?status=success&player=$player");
+        $_POST = array();
       } 
       catch(PDOException $e) 
       {

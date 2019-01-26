@@ -21,5 +21,6 @@
   </main>
   <?php include('inc/footerUI.php')?>  
   <script src="td.js" ></script>
+  <script src="gamePanel.js"></script>
 </body>
 </html>
