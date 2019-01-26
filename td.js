@@ -123,6 +123,15 @@ function pageInit() {
 					gameContext.moveTo(towerList[i].xStart, towerList[i].yStart);
 					gameContext.lineTo(wave[j].xPos + 25, wave[j].yPos + 15);
 					gameContext.stroke();
+					wave[j].hp -= 1;
+					if (wave[j].hp <= 0) {
+						if (j === 0) {
+							wave.splice(0, 1);
+						}
+						else {
+							wave.splice(j, j);
+						}
+					}
 				}
 			}
 		}
@@ -146,7 +155,7 @@ function pageInit() {
 
 		for (let i = 0; i < 10 ; i++) {
 			setTimeout(function () {
-				wave.push(new Enemy(300, 0, 1, 5, enemyImg));
+				wave.push(new Enemy(300, 0, 25, 5, enemyImg));
 			}, waveDelay);
 			waveDelay += 2000;
 		}
