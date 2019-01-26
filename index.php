@@ -1,3 +1,5 @@
+<?php include('inc/db.php');?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,17 +24,18 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-body">
-            <form action="td.php" method="POST">
+            <form action="index.php" method="POST">
               <div class="formDiv" id="formDiv">
                 <div>
                   <h2>Enter Your Name</h2>
                 </div>
-                <input type="text" class="formDiv__nameInput" id="formDiv__nameInput" name="userName">
+
+                <!-- NAME INPUT -->
+                <input type="text" class="formDiv__nameInput" id="formDiv__nameInput" name="playerName">
+                
                 <div>
                   <button type="button" class="button btn-secondary" data-dismiss="modal">Cancel</button>
-                  <a href="td.php">
-                    <button type="submit" class="formDiv__button" id="formDiv__button" name="submit">Defend Your Home</button>
-                  </a>
+                  <button type="submit" class="formDiv__button" id="formDiv__button" name="playGame">Defend Your Home</button>
                 </div>
               </div>
             </div>
@@ -40,7 +43,24 @@
         </div>
       </div>
     </div>
+    <?
+    if(isset($_POST["playGame"]))
+    {
+      $insertStmt = $conn->prepare("INSERT INTO player VALUES (DEFAULT, :player_name)");
+      $player = $_POST['playerName'];
+      filter_var($player, FILTER_SANITIZE_SPECIAL_CHARS);
+      $insertStmt->bindParam(':player_name', $player);
 
+      try 
+      {
+        $insertStmt->execute();
+      } 
+      catch(PDOException $e) 
+      {
+        echo 'PDOException: ' . $e->getMessage();
+      }                  
+    }     
+    ?>
 
   </main>
 </body>
@@ -48,3 +68,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </html>
+
