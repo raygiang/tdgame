@@ -492,7 +492,6 @@ function pageInit() {
     }
 
     function initGame () {
-        setTimeout(spawnWave, 1000);
         var updateInterval = setInterval(updateCanvas, 50);
         gameCanvas.style.display = "block";
         gamePanel.style.display = "block";
@@ -510,6 +509,12 @@ function pageInit() {
             yPos: ySquareNum * 50
         };
     };
+
+    function startRound() {
+        let buildPhaseTimer = 60;
+        
+        setTimeout(spawnWave, 1000);
+    }
 
     upgradeButton.style.display = "none";
     initOccupiedSpots();
