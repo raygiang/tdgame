@@ -8,6 +8,7 @@ function pageInit() {
     const lifeHeader = document.getElementById("life");
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
+    const startButton = document.getElementById("start-button");
 
     var towerList = [];
     var occupiedSpots = [];
@@ -490,6 +491,13 @@ function pageInit() {
         }
     }
 
+    function initGame () {
+        setTimeout(spawnWave, 1000);
+        var updateInterval = setInterval(updateCanvas, 50);
+        gameCanvas.style.display = "block";
+        gamePanel.style.display = "block";
+    }
+
     // When the mouse moves within the canvas this function will update the
     // currSquare object to correspond to the box the mouse is in
     gameCanvas.onmousemove = function (e) {
@@ -502,12 +510,13 @@ function pageInit() {
             yPos: ySquareNum * 50
         };
     };
-    
-    spawnWave();
+
     upgradeButton.style.display = "none";
     initOccupiedSpots();
     gameCanvas.onclick = createTower;
-    var updateInterval = setInterval(updateCanvas, 50);
+    gameCanvas.style.display = "none";
+    gamePanel.style.display = "none";
+    startButton.onclick = initGame;
 }
 
 window.onload = pageInit;
