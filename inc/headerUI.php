@@ -6,6 +6,6 @@
 		<li>Build Phase: </li>
 		<li></li>
 		<li id="score"></li>
-		<li>Go Back</li>
+		<li><button class="button"data-toggle="modal" data-target="#confirmationModal">Go Back</button></li>
 	</ul>
 </header>
