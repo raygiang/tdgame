@@ -8,8 +8,8 @@ function pageInit() {
     const lifeHeader = document.getElementById("life");
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
-    // const radio = document.getElementsByName("tower_select");
-    // const towerImg = document.getElementsByClassName("tower_img");
+    const radio = document.getElementsByName("tower_select");
+    const towerImg = document.getElementsByClassName("tower_img");
 
     var towerList = [];
     var occupiedSpots = [];
@@ -31,26 +31,26 @@ function pageInit() {
     var money = 1000;
     var refreshCount = 1;
 
-    // function radioClick() {
-    //     for (var i = 0; i < radio.length; i++) {
-    //         if (radio[i] === this) {
-    //             if (towerImg[i].classList.contains('active')) {
-    //                 radio[i].checked = false;
-    //                 towerImg[i].classList.remove("active");
-    //             }
-    //         }
-    //     }
-    // }
+    function radioClick() {
+        for (var i = 0; i < radio.length; i++) {
+            if (radio[i] === this) {
+                if (towerImg[i].classList.contains('active')) {
+                    radio[i].checked = false;
+                    towerImg[i].classList.remove("active");
+                }
+            }
+        }
+    }
 
-    // function radioChange() {
-    //     for (var i = 0; i < radio.length; i++) {
-    //         if (radio[i] === this) {
-    //             towerImg[i].classList.add("active");
-    //         } else {
-    //             towerImg[i].classList.remove("active");
-    //         }
-    //     }
-    // }
+    function radioChange() {
+        for (var i = 0; i < radio.length; i++) {
+            if (radio[i] === this) {
+                towerImg[i].classList.add("active");
+            } else {
+                towerImg[i].classList.remove("active");
+            }
+        }
+    }
 
     function ArrowTower(xStart, yStart) {
         this.xStart = xStart;
@@ -60,15 +60,16 @@ function pageInit() {
         this.spdCount = 5;
         this.delay = 5;
         this.range = 300;
+        this.angle = 0;
+        this.arrowTowerImage = new Image();
+        this.arrowTowerImage.src = "images/siegeBallista.png";
 
         this.redraw = function() {
-            var arrowTower = new Image();
-            arrowTower.src = "images/siegeBallista.png";
             gameContext.save();
-            gameContext.translate(this.xStart + 100, this.yStart + 100);
-            gameContext.rotate(Math.PI);
-            gameContext.drawImage(arrowTower, -this.xStart, -this.yStart, 50, 50);
-
+            gameContext.translate(this.xStart + 25, this.yStart + 25);
+            gameContext.rotate(this.angle + Math.PI / 2);
+            gameContext.drawImage(this.arrowTowerImage, -25, -25, 50, 50);
+            gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
             gameContext.restore();
         }
 
@@ -80,9 +81,11 @@ function pageInit() {
             this.spdCount++;
             for (let j = 0; j < wave.length; j++) {
                 if (this.isAttacking === false && this.spdCount > this.delay) {
-                    let xDist = Math.abs(wave[j].xPos - this.xStart);
-                    let yDist = Math.abs(wave[j].yPos - this.yStart);
-                    if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < this.range) {
+                    let xDist = wave[j].xPos - this.xStart + 25;
+                    let yDist = wave[j].yPos - this.yStart + 25;
+                    this.angle = Math.atan2(yDist, xDist);
+                    if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                        Math.pow(Math.abs(yDist), 2)) < this.range) {
                         this.arrow(j);
                         if (this.spdCount === this.delay + 10) {
                             wave[j].hp -= this.power;
@@ -129,19 +132,27 @@ function pageInit() {
         this.power = 5;
         this.isAttacking = false;
         this.range = 300;
+        this.laserTowerImage = new Image();
+        this.laserTowerImage.src = "images/towerDefense__laser.png";
 
         this.redraw = function() {
-            gameContext.fillStyle = "orange";
-            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
+            gameContext.save();
+            gameContext.translate(this.xStart + 25, this.yStart + 25);
+            gameContext.rotate(this.angle + Math.PI / 2);
+            gameContext.drawImage(this.laserTowerImage, -25, -25, 50, 50);
+            gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+            gameContext.restore();
         }
 
         this.attack = function() {
             this.isAttacking = false;
             for (let j = 0; j < wave.length; j++) {
                 if (this.isAttacking === false) {
-                    let xDist = Math.abs(wave[j].xPos - this.xStart);
-                    let yDist = Math.abs(wave[j].yPos - this.yStart);
-                    if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < this.range) {
+                    let xDist = wave[j].xPos - this.xStart + 25;
+                    let yDist = wave[j].yPos - this.yStart + 25;
+                    this.angle = Math.atan2(yDist, xDist);
+                    if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                        Math.pow(Math.abs(yDist), 2)) < this.range) {
                         this.laser(j);
                         wave[j].hp -= this.power;
                         if (wave[j].hp <= 0) {
@@ -175,11 +186,16 @@ function pageInit() {
         this.spdCount = 50;
         this.delay = 50;
         this.range = 300;
+        this.artilleryTowerImage = new Image();
+        this.artilleryTowerImage.src = "images/towerDefense_artillery.png";
 
         this.redraw = function() {
-            var img = new Image();
-            img.src = "images/towerDefense_artillery.png";
-            gameContext.drawImage(img, this.xStart, this.yStart, 50, 50);
+            gameContext.save();
+            gameContext.translate(this.xStart + 25, this.yStart + 25);
+            gameContext.rotate(this.angle + Math.PI / 2);
+            gameContext.drawImage(this.artilleryTowerImage, -25, -25, 50, 50);
+            gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+            gameContext.restore();
         }
 
         this.attack = function() {
@@ -190,9 +206,11 @@ function pageInit() {
             this.spdCount++;
             for (let j = 0; j < wave.length; j++) {
                 if (this.isAttacking === false && this.spdCount > this.delay) {
-                    let xDist = Math.abs(wave[j].xPos - this.xStart);
-                    let yDist = Math.abs(wave[j].yPos - this.yStart);
-                    if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < this.range) {
+                    let xDist = wave[j].xPos - this.xStart + 25;
+                    let yDist = wave[j].yPos - this.yStart + 25;
+                    this.angle = Math.atan2(yDist, xDist);
+                    if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                        Math.pow(Math.abs(yDist), 2)) < this.range) {
                         this.boom(j);
                         if (this.spdCount === this.delay + 10) {
                             for (let k = 0; k < wave.length; k++) {
@@ -250,10 +268,16 @@ function pageInit() {
         this.spdCount = 25;
         this.delay = 25;
         this.range = 400;
+        this.cannonImage = new Image();
+        this.cannonImage.src = "images/towerDefense_cannon.png";
 
         this.redraw = function() {
-            gameContext.fillStyle = "yellow";
-            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
+            gameContext.save();
+            gameContext.translate(this.xStart + 25, this.yStart + 25);
+            gameContext.rotate(this.angle + Math.PI / 2);
+            gameContext.drawImage(this.cannonImage, -25, -25, 50, 50);
+            gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+            gameContext.restore();
         }
 
         this.attack = function() {
@@ -264,9 +288,11 @@ function pageInit() {
             this.spdCount++;
             for (let j = 0; j < wave.length; j++) {
                 if (this.isAttacking === false && this.spdCount > this.delay) {
-                    let xDist = Math.abs(wave[j].xPos - this.xStart);
-                    let yDist = Math.abs(wave[j].yPos - this.yStart);
-                    if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < this.range) {
+                    let xDist = wave[j].xPos - this.xStart + 25;
+                    let yDist = wave[j].yPos - this.yStart + 25;
+                    this.angle = Math.atan2(yDist, xDist);
+                    if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                        Math.pow(Math.abs(yDist), 2)) < this.range) {
                         this.cannon(j);
                         if (this.spdCount === this.delay + 10) {
                             wave[j].hp -= this.power;
@@ -479,10 +505,10 @@ function pageInit() {
         };
     };
 
-    // for (var i = 0; i < radio.length; i++) {
-    //     radio[i].onchange = radioChange;
-    //     radio[i].onclick = radioClick;
-    // }
+    for (var i = 0; i < radio.length; i++) {
+        radio[i].onchange = radioChange;
+        radio[i].onclick = radioClick;
+    }
 
     spawnWave();
     upgradeButton.style.display = "none";
