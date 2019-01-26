@@ -8,8 +8,6 @@ function pageInit() {
     const lifeHeader = document.getElementById("life");
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
-    const radio = document.getElementsByName("tower_select");
-    const towerImg = document.getElementsByClassName("tower_img");
 
     var towerList = [];
     var occupiedSpots = [];
@@ -504,12 +502,7 @@ function pageInit() {
             yPos: ySquareNum * 50
         };
     };
-
-    for (var i = 0; i < radio.length; i++) {
-        radio[i].onchange = radioChange;
-        radio[i].onclick = radioClick;
-    }
-
+    
     spawnWave();
     upgradeButton.style.display = "none";
     initOccupiedSpots();
