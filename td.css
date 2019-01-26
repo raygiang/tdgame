@@ -34,3 +34,38 @@ body {
 	margin-top: 50px;
 	border: 1px solid #000;
 }
+
+/*Tower Radio Buttons*/
+#tower-select input{
+	position: absolute;
+	left: -10000px;
+}
+
+#tower-select img{
+	width: 50px;
+	cursor: pointer;
+}
+
+.tower_img{
+  padding: 5px;
+  margin: 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: #B0B0B0;
+  transition: all 0.5s;
+}
+
+.active{
+	background-color: grey;
+	border-radius: 50%;
+	animation: glow 2s infinite linear;
+}
+
+@keyframes glow{
+  0% , 100%{
+    box-shadow: 0 0 15px rgba(246, 185, 59, 0);
+  }
+  50%{
+    box-shadow: 0 0 35px rgba(246, 186, 59, .9);
+  }
+}
