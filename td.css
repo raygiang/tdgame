@@ -69,3 +69,7 @@ body {
     box-shadow: 0 0 35px rgba(246, 186, 59, .9);
   }
 }
+
+table {
+	text-align: left;
+}
