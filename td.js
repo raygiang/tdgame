@@ -1,6 +1,9 @@
 function pageInit() {
     const gameCanvas = document.getElementById("game-canvas");
     const gameContext = gameCanvas.getContext("2d");
+    const scoreHeader = document.getElementById("score");
+    const lifeHeader = document.getElementById("life");
+    const moneyHeader = document.getElementById("money");
     var towerList = [];
     var occupiedSpots = [];
     var testDiv = document.getElementById("test");
@@ -9,6 +12,9 @@ function pageInit() {
         yPos: 0
     };
     var wave = [];
+    var score = 0;
+    var life = 100;
+    var money = 1000;
     var gamePanel = document.forms.game_panel;
     var refreshCount = 1;
 
@@ -309,6 +315,7 @@ function pageInit() {
                 }
                 else {
                     wave.shift();
+                    life -= 10;
                 }
             }
         }
@@ -327,25 +334,39 @@ function pageInit() {
         if (refreshCount === 11) {
             refreshCount = 1;
         }
+
+        scoreHeader.innerHTML = "Score: " + score;
+        lifeHeader.innerHTML = "Life: " + life;
+        moneyHeader.innerHTML = "Money: " + money;
     }
 
     function createTower() {
         if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) {
             var newTower;
-            if (gamePanel.tower_select.value === "1") {
+            if (gamePanel.tower_select.value === "1" && money >= 50) {
+                money -= 50;
                 newTower = new ArrowTower(currSquare.xPos, currSquare.yPos);
-            }
-            else if (gamePanel.tower_select.value === "2") {
-                newTower = new LaserTower(currSquare.xPos, currSquare.yPos);
-            }
-            else if (gamePanel.tower_select.value === "3") {
-                newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
-            }
-            else if (gamePanel.tower_select.value === "4") {
-                newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
-            }
                 towerList.push(newTower);
                 occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
+            }
+            else if (gamePanel.tower_select.value === "2" && money >= 750) {
+                money -= 750;
+                newTower = new LaserTower(currSquare.xPos, currSquare.yPos);
+                towerList.push(newTower);
+                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
+            }
+            else if (gamePanel.tower_select.value === "3" && money >= 500) {
+                money -= 500;
+                newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
+                towerList.push(newTower);
+                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
+            }
+            else if (gamePanel.tower_select.value === "4" && money >= 250) {
+                money -= 250;
+                newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
+                towerList.push(newTower);
+                occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = true;
+            }
         }
     }
 
