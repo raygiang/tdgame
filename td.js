@@ -53,7 +53,7 @@ function pageInit() {
 		this.redraw = function() {
 			gameContext.drawImage(this.enemyImg, this.xPos + 10, 
 				this.yPos, 30, 30);
-			this.yPos += 5;
+			this.yPos += speed;
 		}
 	}
 
@@ -91,20 +91,39 @@ function pageInit() {
 		gameContext.fillStyle = "lightblue";
 		gameContext.fillRect(currSquare.xPos, currSquare.yPos, 50, 50);
 		
-		drawGrid();
+		// Home
+		gameContext.fillStyle = "green";
+		gameContext.fillRect(300, 550, 50, 50);
 
-		// Redraw Towers
-		for (let i = 0; i < towerList.length; i++) {
-			towerList[i].redraw();
-		}
+		// Spawn Spot
+		gameContext.fillStyle = "red";
+		gameContext.fillRect(300, 0, 50, 50);
+
+		drawGrid();
 
 		// Redraw Wave
 		for (let i = 0; i < wave.length; i++) {
-			if (wave[i].yPos < gameCanvas.height / 2) {
+			if (wave[i].yPos < gameCanvas.height - 50) {
 				wave[i].redraw();
 			}
 			else {
 				wave.shift();
+			}
+		}
+
+		// Redraw Towers
+		for (let i = 0; i < towerList.length; i++) {
+			towerList[i].redraw();
+			for (let j = 0; j < wave.length; j++) {
+				// Lazahhs
+				let xDist = Math.abs(wave[j].xPos - towerList[i].xStart);
+				let yDist = Math.abs(wave[j].yPos - towerList[i].yStart);
+				if (Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2)) < 200) {
+					gameContext.strokeStyle = "blue";
+					gameContext.moveTo(towerList[i].xStart, towerList[i].yStart);
+					gameContext.lineTo(wave[j].xPos + 25, wave[j].yPos + 15);
+					gameContext.stroke();
+				}
 			}
 		}
 
