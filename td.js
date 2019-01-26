@@ -9,6 +9,7 @@ function pageInit() {
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
     const startButton = document.getElementById("start-button");
+    const inventory = document.getElementsByClassName("items");
 
     var towerList = [];
     var occupiedSpots = [];
@@ -354,7 +355,7 @@ function pageInit() {
     }
 
     function randomItem() {
-        if (items.length < 5) {
+        if (items.length < 6) {
             if (Math.floor(Math.random() * (75-1) + 1) === 1) {
                 items.push("0");
                 console.log(items);
@@ -446,6 +447,15 @@ function pageInit() {
         scoreHeader.innerHTML = "Score: " + score;
         lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
+
+        for (let i = 0; i < inventory.length; i++) {
+            inventory[i].value = "";
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            inventory[i].value = items[i];
+            inventory[i].innerHTML = items[i];
+        }
     }
 
     function createTower() {
