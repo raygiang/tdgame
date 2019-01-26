@@ -1,6 +1,7 @@
-$primary: #6699CC;
-$secondary: #FF8C42;
-$primary-font: #FFF275;
+$primary: #1C1F33;
+$secondary: #0E7C7B;
+$primary-font: #FF5E5B;
+$primary-button:#FF3C38;
 * {
 	box-sizing: border-box;
 }
@@ -25,6 +26,7 @@ body{
 				height: 85vh;
 				width: 80vw;
 				align-items: center;
+				border-radius: 5px;
 				&__title{
 					margin: 0;
 					font-size: 5em;
@@ -33,7 +35,69 @@ body{
 				}
 				&__button{
 					margin-top: 3em;
+					color: #fff;
+					text-transform: uppercase;
+					background: $primary-button;
+					padding: 20px;
+					border: 4px solid #494949;
+					border-radius: 6px;
+					display: inline-block;
+					cursor: pointer;
+					font-family: inherit;
+					font-size: 2em;
+					&:hover{
+						color: black;
+						background: #f6b93b;
+						border-color: #f6b93b;
+						transition: all 0.4s ease 0s;
+					}
 				}
+			}
+
+			.formDiv {
+				text-align: center;
+				&__button{
+					margin-top: 3em;
+					color: #fff;
+					text-transform: uppercase;
+					background: $primary-button;
+					// padding: 20px;
+					border: 4px solid #494949;
+					border-radius: 6px;
+					display: inline-block;
+					cursor: pointer;
+					font-family: inherit;
+					font-size: 1em;
+					&:hover{
+						color: black;
+						background: #f6b93b;
+						border-color: #f6b93b;
+						transition: all 0.4s ease 0s;
+					}
+				}
+			}
+			.modal-body
+			{
+				background-color: $primary;
+				color: $primary-font;
+			}
+
+			.modal-content
+			{
+				border-radius: 6px;
+				-webkit-border-radius: 6px;
+				-moz-border-radius: 6px;
+				background-color: $primary;
+			}
+
+			.modal-footer
+			{
+				border-bottom-left-radius: 6px;
+				border-bottom-right-radius: 6px;
+				-webkit-border-bottom-left-radius: 6px;
+				-webkit-border-bottom-right-radius: 6px;
+				-moz-border-radius-bottomleft: 6px;
+				-moz-border-radius-bottomright: 6px;
 			}
 		}
 	}
