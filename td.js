@@ -9,6 +9,7 @@ function pageInit() {
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
     const startButton = document.getElementById("start-button");
+    const inventory = document.getElementsByClassName("items");
 
     var towerList = [];
     var occupiedSpots = [];
@@ -29,32 +30,12 @@ function pageInit() {
     var life = 100;
     var money = 1000;
     var refreshCount = 1;
-
-    function radioClick() {
-        for (var i = 0; i < radio.length; i++) {
-            if (radio[i] === this) {
-                if (towerImg[i].classList.contains('active')) {
-                    radio[i].checked = false;
-                    towerImg[i].classList.remove("active");
-                }
-            }
-        }
-    }
-
-    function radioChange() {
-        for (var i = 0; i < radio.length; i++) {
-            if (radio[i] === this) {
-                towerImg[i].classList.add("active");
-            } else {
-                towerImg[i].classList.remove("active");
-            }
-        }
-    }
+    var slowdown = 1;
 
     function ArrowTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
-        this.power = 1;
+        this.power = 50;
         this.isAttacking = false;
         this.spdCount = 5;
         this.delay = 5;
@@ -92,6 +73,7 @@ function pageInit() {
                         if (wave[j].hp <= 0) {
                             money += wave[j].moneyValue;
                             wave.splice(j, 1);
+                            randomItem();
                         }
                         this.isAttacking = true;
                     }
@@ -128,7 +110,7 @@ function pageInit() {
     function LaserTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
-        this.power = 5;
+        this.power = 25;
         this.isAttacking = false;
         this.range = 300;
         this.laserTowerImage = new Image();
@@ -157,6 +139,7 @@ function pageInit() {
                         if (wave[j].hp <= 0) {
                             money += wave[j].moneyValue;
                             wave.splice(j, 1);
+                            randomItem();
                         }
                         this.isAttacking = true;
                     }
@@ -237,6 +220,7 @@ function pageInit() {
                 if (wave[i].hp <= 0) {
                     money += wave[i].moneyValue;
                     wave.splice(i, 1);
+                    randomItem();
                 }
             }
         }
@@ -299,6 +283,7 @@ function pageInit() {
                         if (wave[j].hp <= 0) {
                             money += wave[j].moneyValue;
                             wave.splice(j, 1);
+                            randomItem();
                             this.isAttacking = false;
                         }
                         this.isAttacking = true;
@@ -339,7 +324,7 @@ function pageInit() {
         this.redraw = function() {
             gameContext.drawImage(this.enemyImg, this.xPos + 10, 
                 this.yPos, 30, 30);
-            this.yPos += speed;
+            this.yPos += speed / slowdown;
         }
     }
 
@@ -367,6 +352,39 @@ function pageInit() {
         }
         gameContext.stroke();
         gameContext.closePath();
+    }
+
+    function randomItem() {
+        if (items.length < 6) {
+            if (Math.floor(Math.random() * (75-1) + 1) === 1) {
+                items.push("0");
+                console.log(items);
+            }
+            if (Math.floor(Math.random() * (50-1) + 1) === 1) {
+                items.push("1");
+                console.log(items);
+            }
+            if (Math.floor(Math.random() * (125-1) + 1) === 1) {
+                items.push("2");
+                console.log(items);
+            }
+        }
+    }
+
+    function useItem(itemNum) {
+        if (itemNum === "0") {
+            life += 30;
+            if (life > 100) {
+                life = 100;
+            }
+        }
+        else if (itemNum === "1") {
+            money += 100;
+        }
+        else{
+            slowdown = 2;
+            setTimeout(function () {slowdown = 1}, 10000);
+        }
     }
 
     function updateCanvas() {
@@ -429,6 +447,15 @@ function pageInit() {
         scoreHeader.innerHTML = "Score: " + score;
         lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
+
+        for (let i = 0; i < inventory.length; i++) {
+            inventory[i].value = "";
+        }
+
+        for (let i = 0; i < items.length; i++) {
+            inventory[i].value = items[i];
+            inventory[i].innerHTML = items[i];
+        }
     }
 
     function createTower() {
@@ -483,9 +510,9 @@ function pageInit() {
         var enemyImg = new Image();
         enemyImg.src = "images/lolface2.png";
 
-        for (let i = 0; i < 20 ; i++) {
+        for (let i = 0; i < 2000 ; i++) {
             setTimeout(function () {
-                wave.push(new Enemy(300, 0, 300, 2, enemyImg));
+                wave.push(new Enemy(300, 0, 300, 5, enemyImg));
             }, waveDelay);
             waveDelay += 500;
         }
@@ -495,6 +522,7 @@ function pageInit() {
         var updateInterval = setInterval(updateCanvas, 50);
         gameCanvas.style.display = "block";
         gamePanel.style.display = "block";
+        startButton.style.display = "none";
         spawnWave();
     }
 
