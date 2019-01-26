@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" type="text/css" href="td.css">
   <link rel="stylesheet" type="text/css" href="stylesheets/css/ui.css">
+  <style>@import url('https://fonts.googleapis.com/css?family=VT323');</style>
 </head>
 <body>
   <?php include('inc/headerUI.php')?>
@@ -18,6 +19,7 @@
       </canvas>
       <?php include('inc/gamePanel.php');?>
     </div>
+    <button id="start-button" type="button">Start Game</button>
   </main>
   <?php include('inc/footerUI.php')?>  
   <script src="td.js" ></script>

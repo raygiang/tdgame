@@ -427,7 +427,10 @@ function pageInit() {
         }
 
         scoreHeader.innerHTML = "Score: " + score;
-        lifeHeader.innerHTML = "Life: " + life;
+        // lifeHeader.innerHTML = "Life: " + life;
+        //String "Life: " is now written inside footer.php;
+        lifeHeader.innerHTML = life;
+
         moneyHeader.innerHTML = "Money: " + money;
     }
 

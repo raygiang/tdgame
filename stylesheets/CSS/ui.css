@@ -26,7 +26,7 @@ ul {
   max-width: 100%;
   background-color: #1C1F33;
   color: #FF5E5B;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
@@ -37,6 +37,14 @@ ul {
   flex-direction: row;
   justify-content: space-between;
   padding: 0;
+}
+.footer__hp {
+  position: relative;
+  color: white;
+  display: inline-block;
+  width: 200px;
+  text-align: center;
+  background-color: #FF5E5B;
 }
 
 /*# sourceMappingURL=ui.css.map */

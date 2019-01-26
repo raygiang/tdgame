@@ -1,9 +1,9 @@
 $uiBG: #1C1F33;
 $uiFont: #FF5E5B;
+$hpbarBG: #FF5E5B;
 
 body {
 	font-family: 'VT323', monospace;
-
 }
 
 ul{
@@ -30,7 +30,7 @@ ul{
 	max-width: 100%;
 	background-color: $uiBG;
 	color: $uiFont;
-	position: absolute;
+	position: fixed;
 	bottom: 0;
 	left: 0;
 	right: 0;
@@ -40,5 +40,13 @@ ul{
 		flex-direction: row;
 		justify-content: space-between;
 		padding: 0;
+	}
+	&__hp {
+		position: relative;
+		color: white;
+		display:inline-block;
+		width: 200px;
+		text-align: center;
+		background-color: $hpbarBG;
 	}
 }
