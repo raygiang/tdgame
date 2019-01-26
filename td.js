@@ -39,8 +39,9 @@ function pageInit() {
         this.range = 300;
 
         this.redraw = function() {
-            gameContext.fillStyle = "blue";
-            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
+            var arrowTower = new Image();
+            arrowTower.src = "images/siegeBallista.png";
+            gameContext.drawImage(arrowTower, this.xStart, this.yStart, 50, 50);
         }
 
         this.attack = function() {
@@ -148,8 +149,9 @@ function pageInit() {
         this.range = 300;
 
         this.redraw = function() {
-            gameContext.fillStyle = "purple";
-            gameContext.fillRect(this.xStart, this.yStart, 50, 50);
+            var img = new Image();
+            img.src = "images/towerDefense_artillery.png";
+            gameContext.drawImage(img, this.xStart, this.yStart, 50, 50);
         }
 
         this.attack = function() {
