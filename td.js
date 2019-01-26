@@ -5,7 +5,7 @@ function pageInit() {
     const gameContext = gameCanvas.getContext("2d");
     const gamePanel = document.forms.game_panel;
     const scoreHeader = document.getElementById("score");
-    const lifeHeader = document.getElementById("life");
+    const lifeBar = document.getElementById("life");
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
     const startButton = document.getElementById("start-button");
@@ -427,10 +427,7 @@ function pageInit() {
         }
 
         scoreHeader.innerHTML = "Score: " + score;
-        // lifeHeader.innerHTML = "Life: " + life;
-        //String "Life: " is now written inside footer.php;
-        lifeHeader.innerHTML = life;
-
+        lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
     }
 
@@ -498,6 +495,7 @@ function pageInit() {
         var updateInterval = setInterval(updateCanvas, 50);
         gameCanvas.style.display = "block";
         gamePanel.style.display = "block";
+        spawnWave();
     }
 
     // When the mouse moves within the canvas this function will update the
