@@ -49,7 +49,7 @@
         </table>    
       </div>
       <div>
-        <button class="button">Back to Main Page</button>
+        <a href="index.php"><button class="button">Back to Main Page</button></a>
       </div>
 
     </div>
