@@ -75,6 +75,8 @@ function pageInit() {
                         if (wave[j].hp <= 0) {
                             money += wave[j].moneyValue;
                             wave.splice(j, 1);
+                            score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                                Math.pow(Math.abs(yDist), 2)));
                             randomItem();
                         }
                         this.isAttacking = true;
@@ -141,6 +143,8 @@ function pageInit() {
                         if (wave[j].hp <= 0) {
                             money += wave[j].moneyValue;
                             wave.splice(j, 1);
+                            score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                                Math.pow(Math.abs(yDist), 2)));
                             randomItem();
                         }
                         this.isAttacking = true;
@@ -222,6 +226,8 @@ function pageInit() {
                 if (wave[i].hp <= 0) {
                     money += wave[i].moneyValue;
                     wave.splice(i, 1);
+                    score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                        Math.pow(Math.abs(yDist), 2)));
                     randomItem();
                 }
             }
@@ -285,6 +291,8 @@ function pageInit() {
                         if (wave[j].hp <= 0) {
                             money += wave[j].moneyValue;
                             wave.splice(j, 1);
+                            score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
+                                Math.pow(Math.abs(yDist), 2)));
                             randomItem();
                             this.isAttacking = false;
                         }
