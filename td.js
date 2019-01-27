@@ -827,7 +827,7 @@ function pageInit() {
             }
         }
         
-        setTimeout(function () {doneSpawn = true}, maxDelay);
+        setTimeout(function () {doneSpawn = true;}, maxDelay);
         waveCount++;
     }
 
