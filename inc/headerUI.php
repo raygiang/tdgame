@@ -1,7 +1,7 @@
 <header class="header">
 	<ul class="header__list">
 		<li class="header__playerNameLabel">PLAYER: <?php
-			echo $_GET['player'];
+			echo $_REQUEST['player'];
 		?></li>
 		<li>Build Phase: </li>
 		<li></li>
