@@ -2,18 +2,26 @@
  	<h2>Game Panel</h2>
  	<div id="tower-select">
  		<h3>Towers</h3>
- 		<label for="arrow-tower"><img class="tower_img" src="images/siegeBallista.png" alt="Arrow Tower"/></label>
- 		<input type="radio" id="arrow-tower" name="tower_select" value="1" />
- 		<br />
- 		<label for="laser-tower"><img class="tower_img" src="images/towerDefense__laser.png" alt="Laser Tower" /></label>
- 		<input type="radio" id="laser-tower" name="tower_select" value="2" />
- 		<br />
- 		<label for="artillery-tower"><img class="tower_img" src="images/towerDefense_artillery.png" alt="Artillery Tower"/></label>
- 		<input type="radio" id="artillery-tower" name="tower_select" value="3" />
- 		<br />
- 		<label for="cannon-tower"><img class="tower_img" src="images/towerDefense_cannon.png" alt="Canon Tower"/></label>
- 		<input type="radio" id="cannon-tower" name="tower_select" value="4" />
- 		<br />
+ 		<table style="text-align:left">
+ 			<tbody>
+ 				<tr>
+ 					<td><label for="arrow-tower"><img class="tower_img" src="images/siegeBallista.png" alt="Arrow Tower"/> Arrow (Cost: 250)</label></td>
+ 					<td><input type="radio" id="arrow-tower" name="tower_select" value="1" /></td>
+ 				</tr>
+ 				<tr>
+ 					<td><label for="laser-tower"><img class="tower_img" src="images/towerDefense__laser.png" alt="Laser Tower" /> Laser</label></td>
+ 					<td><input type="radio" id="laser-tower" name="tower_select" value="2" /></td>
+ 				</tr>
+ 				<tr>
+ 					<td><label for="artillery-tower"><img class="tower_img" src="images/towerDefense_artillery.png" alt="Artillery Tower"/> Artillery</label></td>
+ 					<td><input type="radio" id="artillery-tower" name="tower_select" value="3" /></td>
+ 				</tr>
+ 				<tr>
+ 					<td><label for="cannon-tower"><img class="tower_img" src="images/towerDefense_cannon.png" alt="Canon Tower"/> Cannon</label></td>
+ 					<td><input type="radio" id="cannon-tower" name="tower_select" value="4" /></td>
+ 				</tr>
+ 			</tbody>
+ 		</table>
  		<button id="upgrade" type='button'>Upgrade Tower</button>
  	</div>
  	<div id="items">
