@@ -24,7 +24,7 @@
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-body">
-            <form action="index.php" method="POST">
+            <form action="index.php" method="GET">
               <div class="formDiv" id="formDiv">
                 <div>
                   <h2>Enter Your Name</h2>
@@ -44,18 +44,13 @@
       </div>
     </div>
     <?php
-    if(isset($_POST["submit_button"]))
+    if(isset($_GET["submit_button"]))
     {
-      $insertStmt = $conn->prepare("INSERT INTO player VALUES (NULL, :player_name)");
-      $player = $_POST['playerName'];
+      $player = $_GET['playerName'];
       filter_var($player, FILTER_SANITIZE_SPECIAL_CHARS);
-      $insertStmt->bindParam(':player_name', $player);
       try 
       {
-        $insertStmt->execute();
-        $currentPlayerId = $conn->lastInsertId();
-        header("Location: td.php?status=success&player=$player&player_id=$currentPlayerId");
-        $_POST = array();
+        header("Location: td.php?status=success&playerName=$player");
       } 
       catch(PDOException $e) 
       {

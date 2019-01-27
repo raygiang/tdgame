@@ -24,4 +24,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </html>
+<?php
+if(isset($_POST["submit-score"]))
+{
+  $insertStmt = $conn->prepare(
+    "INSERT INTO player 
+    VALUES (
+    DEFAULT, 
+    :player_name, 
+    :score)");
 
+  $score = $_POST['finalScore'];
+  $player = $_POST['testName'];
+
+  //Sanitize input
+  filter_var($score, FILTER_SANITIZE_SPECIAL_CHARS);
+  filter_var($player, FILTER_SANITIZE_SPECIAL_CHARS);
+
+  //Bind query parameters
+  $insertStmt->bindParam(':player_name', $player);
+  $insertStmt->bindParam(':score', $score);
+  try 
+  {
+    $insertStmt->execute();
+    $currentPlayerId = $conn->lastInsertId();
+    header("Location: scoreboard.php?status=success");
+  } 
+  catch(PDOException $e) 
+  {
+    echo 'PDOException: ' . $e->getMessage();
+  }                  
+}     
+?>

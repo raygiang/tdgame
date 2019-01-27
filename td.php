@@ -12,8 +12,6 @@
 <body>
   <?php include('inc/headerUI.php');?>
   <?php include('inc/backToScreen.php');?>
-  <?php include('inc/submitScoreModal.php');?>
-
   <main id="main">
     <div id="messages"></div>
     <div class="page-wrapper flex-container">
@@ -33,6 +31,7 @@
   <?php include('inc/footerUI.php')?>  
   <script src="td.js" ></script>
   <script src="gamePanel.js"></script>
+  <?php include('inc/submitScoreModal.php');?>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>

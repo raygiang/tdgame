@@ -4,34 +4,12 @@
       <div class="modal-body">
         <div class="formDiv" id="formDiv">
           <div>
-            <form action="" method="POST">
+            <form action="scoreboard.php" method="POST">
               <h2 id="win-lose-status"></h2>
-              <input id="displayScore" value="" name="finalScore" disabled>
+              <input id="displayScore" value="" name="finalScore" readonly>
+              <input type="hidden" name="testName" value="<?= $_REQUEST['playerName'];?>">
               <button type="button" id="restart">Back To Main Page</button>
-              <button type="submit" class="formDiv__button" id="submit-score" name="submitScore">Submit Score</button></a>
-              <?php
-              if(isset($_POST["submitScore"]))
-              {
-                $insertStmt = $conn->prepare("INSERT INTO scoreboard VALUES (DEFAULT, :score, :player_id)");
-                $score = $_POST['finalScore'];
-                $playerId = $_REQUEST['player_id'];
-                filter_var($score, FILTER_SANITIZE_SPECIAL_CHARS);
-                filter_var($playerId, FILTER_SANITIZE_SPECIAL_CHARS);
-                $insertStmt->bindParam(':score', $score);
-                $insertStmt->bindParam(':player_id', $playerId);
-                try 
-                {
-                  $insertStmt->execute();
-                  $currentPlayerId = $conn->lastInsertId();
-                  header("Location: scoreboard.php?status=success");
-                  $_POST = array();
-                } 
-                catch(PDOException $e) 
-                {
-                  echo 'PDOException: ' . $e->getMessage();
-                }                  
-              }     
-              ?>
+              <button type="submit" class="formDiv__button" id="submit-score" name="submit-score">Submit Score</button></a>
             </form>
           </div>
         </div>
@@ -39,4 +17,3 @@
     </div>
   </div>
 </div>
-
