@@ -10,8 +10,9 @@
   <style>@import url('https://fonts.googleapis.com/css?family=VT323');</style>
 </head>
 <body>
-  <?php include('inc/headerUI.php')?>
-  <?php include('inc/backToScreen.php')?>
+  <?php include('inc/headerUI.php');?>
+  <?php include('inc/backToScreen.php');?>
+  <?php include('inc/submitScoreModal.php');?>
 
   <main id="main">
     <div id="messages"></div>
@@ -22,8 +23,12 @@
       <?php include('inc/gamePanel.php');?>
     </div>
     <button id="start-button" type="button">Start Game</button>
-    <button id="submit-score" type="button">Submit Score</button>
-    <button id="restart" type="button">Restart</button>
+
+    <!--    
+      Moved Buttons to submitScoreModal.php
+      <button id="submit-score" type="button">Submit Score</button>
+      <button id="restart" type="button">Restart</button> 
+    -->
   </main>
   <?php include('inc/footerUI.php')?>  
   <script src="td.js" ></script>

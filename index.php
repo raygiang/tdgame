@@ -46,15 +46,15 @@
     <?php
     if(isset($_POST["submit_button"]))
     {
-      $insertStmt = $conn->prepare("INSERT INTO player VALUES (DEFAULT, :player_name)");
+      $insertStmt = $conn->prepare("INSERT INTO player VALUES (NULL, :player_name)");
       $player = $_POST['playerName'];
       filter_var($player, FILTER_SANITIZE_SPECIAL_CHARS);
       $insertStmt->bindParam(':player_name', $player);
-      // $currentPlayer = $conn->lastInsertId();
       try 
       {
         $insertStmt->execute();
-        header("Location: td.php?status=success&player=$player");
+        $currentPlayerId = $conn->lastInsertId();
+        header("Location: td.php?status=success&player=$player&player_id=$currentPlayerId");
         $_POST = array();
       } 
       catch(PDOException $e) 

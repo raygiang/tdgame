@@ -14,6 +14,11 @@ ul {
   color: #FF5E5B;
   padding: 0.1em;
 }
+.header #score {
+  color: inherit;
+  background-color: inherit;
+  border: none;
+}
 .header .button {
   color: #fff;
   text-transform: uppercase;
