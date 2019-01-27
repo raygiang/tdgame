@@ -893,7 +893,7 @@ function pageInit() {
     };
 
     for (let i = 0; i < inventory.length; i++) {
-        inventory[i].addEventListener("click", useItem);
+        inventory[i].addEventListener("mouseup", useItem);
     }
 
     submitScoreButton.style.display = "none";
