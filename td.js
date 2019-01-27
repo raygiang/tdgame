@@ -153,6 +153,11 @@ function pageInit() {
             this.isUpgraded = true;
             this.sellPrice += this.upgradeCost * 0.6;
             upgradeButton.style.display = "none";
+            gameContext.save();
+            let upgImg = new Image();
+            upgImg.src = "images/siegeBallista_upgrade.png";
+            this.arrowTowerImage = upgImg;
+            gameContext.restore();
         }
     }
 
@@ -219,10 +224,13 @@ function pageInit() {
             this.isUpgraded = true;
             this.sellPrice += this.upgradeCost * 0.6;
             upgradeButton.style.display = "none";
+            let upgImg = new Image();
+            upgImg.src = "images/towerDefense_laser_upgrade.png";
+            this.laserTowerImage = upgImg;
         }
     }
 
-    function ArtilleryTower(xStart, yStart) {
+    function CannonTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
         this.power = 200;
@@ -230,8 +238,8 @@ function pageInit() {
         this.spdCount = 50;
         this.delay = 50;
         this.range = 300;
-        this.artilleryTowerImage = new Image();
-        this.artilleryTowerImage.src = "images/towerDefense_artillery.png";
+        this.cannonTowerImage = new Image();
+        this.cannonTowerImage.src = "images/towerDefense_cannon.png";
         this.sellPrice = 300;
         this.isUpgraded = false;
         this.upgradeCost = 3500;
@@ -240,7 +248,7 @@ function pageInit() {
             gameContext.save();
             gameContext.translate(this.xStart + 25, this.yStart + 25);
             gameContext.rotate(this.angle + Math.PI / 2);
-            gameContext.drawImage(this.artilleryTowerImage, -25, -25, 50, 50);
+            gameContext.drawImage(this.cannonTowerImage, -25, -25, 50, 50);
             gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
             gameContext.restore();
         }
@@ -318,10 +326,13 @@ function pageInit() {
             this.isUpgraded = true;
             this.sellPrice += this.upgradeCost * 0.6;
             upgradeButton.style.display = "none";
+            let upgImg = new Image();
+            upgImg.src = "images/towerDefense_cannon_upgrade.png";
+            this.cannonTowerImage = upgImg;
         }
     }
 
-    function CannonTower(xStart, yStart) {
+    function ArtilleryTower(xStart, yStart) {
         this.xStart = xStart;
         this.yStart = yStart;
         this.power = 100;
@@ -329,8 +340,8 @@ function pageInit() {
         this.spdCount = 25;
         this.delay = 25;
         this.range = 400;
-        this.cannonImage = new Image();
-        this.cannonImage.src = "images/towerDefense_cannon.png";
+        this.artilleryImage = new Image();
+        this.artilleryImage.src = "images/towerDefense_artillery.png";
         this.sellPrice = 210;
         this.isUpgraded = false;
         this.upgradeCost = 2000;
@@ -339,7 +350,7 @@ function pageInit() {
             gameContext.save();
             gameContext.translate(this.xStart + 25, this.yStart + 25);
             gameContext.rotate(this.angle + Math.PI / 2);
-            gameContext.drawImage(this.cannonImage, -25, -25, 50, 50);
+            gameContext.drawImage(this.artilleryImage, -25, -25, 50, 50);
             gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
             gameContext.restore();
         }
@@ -357,7 +368,7 @@ function pageInit() {
                     this.angle = Math.atan2(yDist, xDist);
                     if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
                         Math.pow(Math.abs(yDist), 2)) < this.range) {
-                        this.cannon(j);
+                        this.kapow(j);
                         if (this.spdCount === this.delay + 10) {
                             wave[j].hp -= this.power;
                         }
@@ -378,7 +389,7 @@ function pageInit() {
             }
         }
 
-        this.cannon = function(enemyIndex) {
+        this.kapow = function(enemyIndex) {
             let centerX = this.xStart + 25;
             let centerY = this.yStart + 25;
             let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
@@ -401,6 +412,9 @@ function pageInit() {
             this.isUpgraded = true;
             this.sellPrice += this.upgradeCost * 0.6;
             upgradeButton.style.display = "none";
+            let upgImg = new Image();
+            upgImg.src = "images/towerDefense_artillery_upgrade.png";
+            this.artilleryImage = upgImg;
         }
     }
 
@@ -408,6 +422,7 @@ function pageInit() {
         this.enemyImg = image;
         this.xPos = xStart;
         this.yPos = yStart;
+        this.maxhp = hp;
         this.hp = hp;
         this.speed = speed;
         this.moneyValue = 0;
@@ -431,6 +446,11 @@ function pageInit() {
         this.redraw = function() {
             gameContext.drawImage(this.enemyImg, this.xPos, 
                 this.yPos, 50, 50);
+            gameContext.fillStyle = "red";
+            gameContext.fillRect(this.xPos, this.yPos + 45, 50, 5);
+            gameContext.fillStyle = "lightgreen";
+            gameContext.fillRect(this.xPos, this.yPos + 45, 50 * (this.hp / this.maxhp), 5);
+
             let xGridNum = Math.floor(this.xPos / 50);
             let yGridNum = Math.floor(this.yPos / 50);
             let rate = this.speed / slowdown;
@@ -723,8 +743,6 @@ function pageInit() {
                     upgradeButton.style.display = "none";
                 }
                 sellButton.style.display = "inline-block";
-                clickedSquare.xPos = currSquare.xPos;
-                clickedSquare.yPos = currSquare.yPos;
                 msgArea.innerHTML = "Tower Built";
             }
             else {
@@ -747,8 +765,6 @@ function pageInit() {
                     upgradeButton.style.display = "none";
                 }
                 sellButton.style.display = "inline-block";
-                clickedSquare.xPos = currSquare.xPos;
-                clickedSquare.yPos = currSquare.yPos;
             }
             else if (occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] === true
                 && gamePanel.tower_select.value !== "") {
@@ -761,6 +777,8 @@ function pageInit() {
                 sellButton.style.display = "none";
             }
         }
+        clickedSquare.xPos = currSquare.xPos;
+        clickedSquare.yPos = currSquare.yPos;
     }
 
     function spawnWave () {
