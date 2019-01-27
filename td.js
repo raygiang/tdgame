@@ -663,7 +663,7 @@ function pageInit() {
         }
 
         // scoreHeader.innerHTML = "Score: " + score;
-        scoreHeader.value = Math.floor(score);
+        scoreHeader.setAttribute("value", Math.floor(score));
         $('#displayScore').val('Your Score: ' + Math.floor(score));
         //display Score in modal.
         lifeBar.value = life;
