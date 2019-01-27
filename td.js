@@ -323,7 +323,7 @@ function pageInit() {
         }
     }
 
-    function Enemy(xStart, yStart, hp, speed, image) {
+    function Enemy (xStart, yStart, hp, speed, image) {
         this.enemyImg = image;
         this.xPos = xStart;
         this.yPos = yStart;
@@ -334,7 +334,55 @@ function pageInit() {
         this.redraw = function() {
             gameContext.drawImage(this.enemyImg, this.xPos + 10, 
                 this.yPos, 30, 30);
-            this.yPos += speed / slowdown;
+            let rate = speed / slowdown;
+            if (this.yPos < 50) {
+                this.yPos += rate;
+            }
+            else {
+                if (this.xPos < 900 && this.yPos === 50) {
+                    this.xPos += rate;
+                }
+                else {
+                    if (this.yPos < 500 && this.xPos === 900) {
+                        this.yPos += rate;
+                    }
+                    else {
+                        if (this.xPos > 800 && this.yPos === 500) {
+                            this.xPos -= rate;
+                        }
+                        else {
+                            if (this.yPos > 150 && this.xPos === 800) {
+                                this.yPos -= rate;
+                            }
+                            else {
+                                if (this.xPos > 700 && this.yPos === 150) {
+                                    this.xPos -= rate;
+                                }
+                                else {
+                                    if (this.yPos < 500 && this.xPos === 700) {
+                                        this.yPos += rate;
+                                    }
+                                    else {
+                                        if (this.xPos > 150 && this.yPos === 500) {
+                                            this.xPos -= rate;
+                                        }
+                                        else {
+                                            if (this.yPos > 400 && this.xPos === 150) {
+                                                this.yPos -= rate;
+                                            }
+                                            else {
+                                                if (this.xPos < 400 && this.yPos === 400) {
+                                                    this.xPos += rate;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -404,7 +452,7 @@ function pageInit() {
         gameContext.drawImage(backgroundImg, 0, 0, gameCanvas.width, gameCanvas.height);
 
         // Highlight the box corresponding to the current mouse position
-        gameContext.fillStyle = "lightblue";
+        gameContext.fillStyle = "rgba(255, 255, 255, 0.5)";
         gameContext.fillRect(currSquare.xPos, currSquare.yPos, 50, 50);
         
         // Home
@@ -425,7 +473,9 @@ function pageInit() {
                 }
                 else {
                     wave.shift();
-                    life -= 10;
+                    if (life > 0) {
+                        life -= 10;
+                    }
                 }
             }
         }
@@ -457,6 +507,7 @@ function pageInit() {
         }
 
         scoreHeader.innerHTML = "Score: " + score;
+        scoreHeader.value = score;
         lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
 
@@ -518,14 +569,14 @@ function pageInit() {
         }
     }
 
-    function spawnWave() {
+    function spawnWave () {
         var waveDelay = 0;
         var enemyImg = new Image();
         enemyImg.src = "images/lolface2.png";
 
         for (let i = 0; i < 2000 ; i++) {
             setTimeout(function () {
-                wave.push(new Enemy(300, 0, 300, 5, enemyImg));
+                wave.push(new Enemy(50, 0, 300, 10, enemyImg));
             }, waveDelay);
             waveDelay += 500;
         }
@@ -537,6 +588,13 @@ function pageInit() {
         gamePanel.style.display = "block";
         startButton.style.display = "none";
         spawnWave();
+        setTimeout(gameOver, 1000);
+    }
+
+    function gameOver () {
+        // testDiv.innerHTML = "you dead";
+        // gameCanvas.style.display = "none";
+        // gamePanel.style.display = "none";
     }
 
     // When the mouse moves within the canvas this function will update the
