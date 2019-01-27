@@ -31,7 +31,6 @@ body {
 
 #game-canvas {
 	flex: 5 0 0;
-	margin-top: 50px;
 	border: 1px solid #000;
 }
 

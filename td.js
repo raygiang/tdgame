@@ -1,6 +1,5 @@
 function pageInit() {
-    var testDiv = document.getElementById("test");
-
+    const msgArea = document.getElementById("test");
     const gameCanvas = document.getElementById("game-canvas");
     const gameContext = gameCanvas.getContext("2d");
     const gamePanel = document.forms.game_panel;
@@ -12,6 +11,20 @@ function pageInit() {
     const inventory = document.getElementsByClassName("items");
     const backgroundImg = new Image();
     backgroundImg.src = "images/td-stages.png";
+    const mapLayout = [
+        ['X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
+        ['X', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X', 'X', 'O', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'X', 'X', 'X', 'O', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'O', 'O', 'O', 'O', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'X', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X']
+    ]
 
     var towerList = [];
     var occupiedSpots = [];
@@ -187,15 +200,18 @@ function pageInit() {
         }
 
         this.attack = function() {
+            let xDist;
+            let yDist;
             this.isAttacking = false;
             if (this.spdCount === this.delay + 10){
                 this.spdCount = 0;
             }
             this.spdCount++;
+
             for (let j = 0; j < wave.length; j++) {
                 if (this.isAttacking === false && this.spdCount > this.delay) {
-                    let xDist = wave[j].xPos - this.xStart + 25;
-                    let yDist = wave[j].yPos - this.yStart + 25;
+                    xDist = wave[j].xPos - this.xStart + 25;
+                    yDist = wave[j].yPos - this.yStart + 25;
                     this.angle = Math.atan2(yDist, xDist);
                     if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
                         Math.pow(Math.abs(yDist), 2)) < this.range) {
@@ -330,58 +346,46 @@ function pageInit() {
         this.hp = hp;
         this.speed = speed;
         this.moneyValue = 50;
+        this.walkedPath = [
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+        ]
 
         this.redraw = function() {
             gameContext.drawImage(this.enemyImg, this.xPos + 10, 
                 this.yPos, 30, 30);
-            let rate = speed / slowdown;
-            if (this.yPos < 50) {
+            let xGridNum = Math.floor(this.xPos / 50);
+            let yGridNum = Math.floor(this.yPos / 50);
+            let rate = this.speed / slowdown;
+
+            if (yGridNum + 1 < 12 && occupiedSpots[yGridNum + 1][xGridNum] === true 
+                && this.walkedPath[yGridNum + 1][xGridNum] === '') {
+                this.walkedPath[yGridNum][xGridNum] = "walked";
                 this.yPos += rate;
             }
+            else if (xGridNum + 1 < 20 && occupiedSpots[yGridNum][xGridNum + 1] === true 
+                && this.walkedPath[yGridNum][xGridNum + 1] === '') {
+                this.walkedPath[yGridNum][xGridNum] = "walked";
+                this.xPos += rate;
+            }
+            else if (yGridNum - 1 >= 0 && occupiedSpots[yGridNum - 1][xGridNum] === true 
+                && this.walkedPath[yGridNum - 1][xGridNum] === '') {
+                this.walkedPath[yGridNum][xGridNum] = "walked";
+                this.yPos -= rate;
+            }
             else {
-                if (this.xPos < 900 && this.yPos === 50) {
-                    this.xPos += rate;
-                }
-                else {
-                    if (this.yPos < 500 && this.xPos === 900) {
-                        this.yPos += rate;
-                    }
-                    else {
-                        if (this.xPos > 800 && this.yPos === 500) {
-                            this.xPos -= rate;
-                        }
-                        else {
-                            if (this.yPos > 150 && this.xPos === 800) {
-                                this.yPos -= rate;
-                            }
-                            else {
-                                if (this.xPos > 700 && this.yPos === 150) {
-                                    this.xPos -= rate;
-                                }
-                                else {
-                                    if (this.yPos < 500 && this.xPos === 700) {
-                                        this.yPos += rate;
-                                    }
-                                    else {
-                                        if (this.xPos > 150 && this.yPos === 500) {
-                                            this.xPos -= rate;
-                                        }
-                                        else {
-                                            if (this.yPos > 400 && this.xPos === 150) {
-                                                this.yPos -= rate;
-                                            }
-                                            else {
-                                                if (this.xPos < 400 && this.yPos === 400) {
-                                                    this.xPos += rate;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                this.walkedPath[yGridNum][xGridNum] = "walked";
+                this.xPos -= rate;
             }
         }
     }
@@ -390,7 +394,13 @@ function pageInit() {
         for (let i = 0; i < gameCanvas.height / 50; i++) {
             var newRow = [];
             for (let j = 0; j < gameCanvas.width / 50; j++) {
-                newRow[j] = false;
+                if (mapLayout[i][j] === 'X') {
+                    newRow[j] = false;
+                }
+                else {
+                    newRow[j] = true;
+                }
+
             }
             occupiedSpots[i] = newRow;
         }
@@ -414,7 +424,7 @@ function pageInit() {
 
     function randomItem() {
         if (items.length < 6) {
-            if (Math.floor(Math.random() * (75-1) + 1) === 1) {
+            if (Math.floor(Math.random() * (125-1) + 1) === 1) {
                 items.push("0");
             }
             if (Math.floor(Math.random() * (50-1) + 1) === 1) {
@@ -427,23 +437,25 @@ function pageInit() {
     }
 
     function useItem() {
-        console.log(this.value);
         if (this.value === "0") {
             life += 30;
-            if (life > 100) {
+            if (life >= 100) {
                 life = 100;
             }
             items.indexOf("0");
             items.splice(items.indexOf("0"), 1);
+            msgArea.innerHTML = "You have healed 30 hit points";
         }
         else if (this.value === "1") {
-            money += 100;
+            money += 250;
             items.splice(items.indexOf("1"), 1);
+            msgArea.innerHTML = "Your money has increased by 250";
         }
         else if (this.value === "2") {
             slowdown = 2;
             setTimeout(function () {slowdown = 1}, 10000);
             items.splice(items.indexOf("2"), 1);
+            msgArea.innerHTML = "Enemies have been slowed for 10 seconds";
         }
     }
 
@@ -494,7 +506,7 @@ function pageInit() {
             gameContext.moveTo(clickedSquare.xPos, clickedSquare.yPos);
             
             gameContext.beginPath();
-            gameContext.lineWidth = "5";
+            gameContext.lineWidth = "3";
             gameContext.strokeStyle = "lightgreen";
             gameContext.rect(clickedSquare.xPos, clickedSquare.yPos, 50, 50);
             gameContext.stroke();
@@ -524,28 +536,54 @@ function pageInit() {
 
     function createTower() {
         let buildSuccess = false;
+        let moneyFlag = false;
+
         if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) {
             var newTower;
-            if (gamePanel.tower_select.value === "1" && money >= 50) {
-                money -= 50;
-                newTower = new ArrowTower(currSquare.xPos, currSquare.yPos);
-                buildSuccess = true;
+            if (gamePanel.tower_select.value === "1") {
+                if (money >= 250) {
+                    money -= 250;
+                    newTower = new ArrowTower(currSquare.xPos, currSquare.yPos);
+                    buildSuccess = true;
+                }
+                else {
+                    moneyFlag = true;
+                }
             }
-            else if (gamePanel.tower_select.value === "2" && money >= 750) {
-                money -= 750;
-                newTower = new LaserTower(currSquare.xPos, currSquare.yPos);
-                buildSuccess = true;
+            else if (gamePanel.tower_select.value === "2") {
+                if (money >= 750) {
+                    money -= 750;
+                    newTower = new LaserTower(currSquare.xPos, currSquare.yPos);
+                    buildSuccess = true;
+                }
+                else {
+                    moneyFlag = true;
+                }
             }
-            else if (gamePanel.tower_select.value === "3" && money >= 500) {
-                money -= 500;
-                newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
-                buildSuccess = true;
+            else if (gamePanel.tower_select.value === "3") {
+                if (money >= 500) {
+                    money -= 500;
+                    newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
+                    buildSuccess = true;
+                }
+                else {
+                    moneyFlag = true;
+                }
             }
-            else if (gamePanel.tower_select.value === "4" && money >= 250) {
-                money -= 250;
-                newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
-                buildSuccess = true;
+            else if (gamePanel.tower_select.value === "4") {
+                if (money >= 350) {
+                    money -= 350;
+                    newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
+                    buildSuccess = true;
+                }
+                else {
+                    moneyFlag = true;
+                }
             }
+            if (moneyFlag === true) {
+                msgArea.innerHTML = "You don't have enough money";
+            }
+
             if (buildSuccess) {
                 towerList.push(newTower);
                 occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = newTower;
@@ -559,9 +597,13 @@ function pageInit() {
         }
         else {
             if (typeof(occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) === "object") {
+                msgArea.innerHTML = "You cannot build here";
                 upgradeButton.style.display = "inline-block";
                 clickedSquare.xPos = currSquare.xPos;
                 clickedSquare.yPos = currSquare.yPos;
+            }
+            else if (typeof(occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] === "boolean")) {
+                msgArea.innerHTML = "You cannot build here";
             }
             else {
                 upgradeButton.style.display = "none";
@@ -576,7 +618,7 @@ function pageInit() {
 
         for (let i = 0; i < 2000 ; i++) {
             setTimeout(function () {
-                wave.push(new Enemy(50, 0, 300, 10, enemyImg));
+                wave.push(new Enemy(50, 0, 300, 2, enemyImg));
             }, waveDelay);
             waveDelay += 500;
         }
@@ -589,6 +631,7 @@ function pageInit() {
         startButton.style.display = "none";
         spawnWave();
         setTimeout(gameOver, 1000);
+        msgArea.innerHTML = "Defend your Home!!!"
     }
 
     function gameOver () {
