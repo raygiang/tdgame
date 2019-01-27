@@ -663,8 +663,8 @@ function pageInit() {
         }
 
         // scoreHeader.innerHTML = "Score: " + score;
-        scoreHeader.value = score;
-        $('#displayScore').val('Your Score: ' + score);
+        scoreHeader.value = Math.floor(score);
+        $('#displayScore').val('Your Score: ' + Math.floor(score));
         //display Score in modal.
         lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
