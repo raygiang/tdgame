@@ -6,6 +6,10 @@ $primary-button:#FF3C38;
 		font-size: 1.5em;
 		tbody{
 			color: #FF5E5B;
+			th, td {
+				padding: 5px;
+				text-align: left;
+			}
 		}
 	}
 

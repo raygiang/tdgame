@@ -7,6 +7,10 @@
 .titleDiv table tbody {
   color: #FF5E5B;
 }
+.titleDiv table tbody th, .titleDiv table tbody td {
+  padding: 5px;
+  text-align: left;
+}
 
 .button {
   margin-top: 2em;

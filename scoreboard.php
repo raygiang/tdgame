@@ -25,7 +25,7 @@
             <?php
 
           //Select statement
-            $sql = "select * from player";
+            $sql = "select * from player ORDER BY score DESC LIMIT 10";
           //Select query on PDO
             $conn->query($sql);
 
