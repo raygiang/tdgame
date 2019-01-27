@@ -9,11 +9,45 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <style>@import url('https://fonts.googleapis.com/css?family=VT323');</style>
   <link rel="stylesheet" href="stylesheets/css/index.css">
+  <link rel="stylesheet" href="stylesheets/css/scoreboard.css">
 </head>
 <body>
   <main id="index">
     <div class="titleDiv" id="titleDiv">
-      <h1 class="titleDiv__title">Score Board</h1>    
+      <h1 class="titleDiv__title">Score Board</h1>
+      <div>
+        <table style="color: red;">
+          <tbody>
+            <tr>
+              <th>Player Name</th>
+              <th>Score</th>
+            </tr>
+            <?php
+
+          //Select statement
+            $sql = "select * from player";
+          //Select query on PDO
+            $conn->query($sql);
+
+          //Loop thourgh database table and display the list of recipe names
+          //Create a hyperlink to the individual recipe pages using the url query string to display individual recipe id.
+            if($conn_status = true){
+              foreach ($conn->query($sql) as $row) {
+                echo
+                "<tr>
+                <td>" .
+                $row['player_name'] .
+                "</td>" .
+                "<td>" . 
+                $row['score'] .
+                "</td>" .
+                "</tr>";
+              }
+            }
+            ?>
+          </tbody>
+        </table>    
+      </div>
 
     </div>
 

@@ -1,0 +1,11 @@
+.titleDiv {
+  flex-direction: column;
+}
+.titleDiv table {
+  font-size: 1.5em;
+}
+.titleDiv table tbody {
+  color: #FF5E5B;
+}
+
+/*# sourceMappingURL=scoreboard.css.map */
