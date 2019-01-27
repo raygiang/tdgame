@@ -46,12 +46,12 @@ body {
 }
 
 .tower_img{
-  padding: 5px;
-  margin: 10px;
-  border-radius: 5px;
-  color: white;
-  background-color: #B0B0B0;
-  transition: all 0.5s;
+	padding: 5px;
+	margin: 10px;
+	border-radius: 5px;
+	color: white;
+	background-color: #B0B0B0;
+	transition: all 0.5s;
 }
 
 .active{
@@ -61,20 +61,30 @@ body {
 }
 
 @keyframes glow{
-  0% , 100%{
-    box-shadow: 0 0 15px rgba(246, 185, 59, 0);
-  }
-  50%{
-    box-shadow: 0 0 35px rgba(246, 186, 59, .9);
-  }
+	0% , 100%{
+		box-shadow: 0 0 15px rgba(246, 185, 59, 0);
+	}
+	50%{
+		box-shadow: 0 0 35px rgba(246, 186, 59, .9);
+	}
 }
 
 table {
 	text-align: left;
 }
 
+
 input {
 	color: inherit;
 	background-color: inherit;
 	border: none;
+}
+
+#inventory {
+	margin: auto;
+}
+
+#inventory img {
+	max-width: 50px;
+	max-height: 50px;
 }

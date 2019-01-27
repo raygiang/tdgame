@@ -32,9 +32,9 @@ function pageInit() {
     ]
     // imgsrc, delay, hp, speed
     const enemyInfo = [
-    ["images/nerd.png", 500, 300, 10, 50], 
-    ["images/lolface2.png", 500, 200, 5, 100], 
-    ["images/pogchamp.png", 5000, 50000000, 2, 10000]
+    ["images/fly.png", 500, 300, 2, 50], 
+    ["images/bee.png", 500, 200, 5, 100], 
+    ["images/mouse.png", 5000, 250000, 2, 10000]
     ];
     const waveInfo = [
     [50, 0, 0],
@@ -42,7 +42,12 @@ function pageInit() {
     [50, 50, 0],
     [100, 100, 0],
     [0, 0, 10]
-    ]
+    ];
+    const itemImages = [
+    "<image src='images/potion.png' alt='Potion Icon' />",
+    "<image src='images/thicc-coin.png' alt='Coin Icon' />",
+    "<image src='images/time-slow.png' alt='Timer Icon' />"
+    ];
 
     var updateInterval;
     var towerList = [];
@@ -84,6 +89,8 @@ function pageInit() {
         this.angle = 0;
         this.arrowTowerImage = new Image();
         this.arrowTowerImage.src = "images/siegeBallista.png";
+        this.arrowImage = new Image();
+        this.arrowImage.src = "images/arrow_projectile.png";
         this.sellPrice = 150;
         this.isUpgraded = false;
         this.upgradeCost = 750;
@@ -116,9 +123,8 @@ function pageInit() {
                     }
                     if (wave[j].hp <= 0) {
                         money += wave[j].moneyValue;
+                        score += (5000 - wave[j].distanceTravelled);
                         wave.splice(j, 1);
-                        score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
-                            Math.pow(Math.abs(yDist), 2)));
                         randomItem();
                     }
                     this.isAttacking = true;
@@ -134,17 +140,15 @@ function pageInit() {
         let centerX = this.xStart + 25;
         let centerY = this.yStart + 25;
         let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
-        let yOffset = ((wave[enemyIndex].yPos + 15) - (centerY)) / 10;
+        let yOffset = ((wave[enemyIndex].yPos + 25) - (centerY)) / 10;
 
-        gameContext.beginPath();
-        gameContext.moveTo(centerX + xOffset * (this.spdCount - this.delay), 
-            centerY + yOffset * (this.spdCount - this.delay));
-        gameContext.arc(centerX + xOffset * (this.spdCount - this.delay), 
-            centerY + yOffset * (this.spdCount - this.delay), 
-            5, 0, 2 * Math.PI, false);
-        gameContext.fillStyle = 'green';
-        gameContext.fill();
-        gameContext.closePath();
+        gameContext.save();
+        gameContext.translate(this.xStart + 25  + xOffset * (this.spdCount - this.delay), 
+            this.yStart + 25 + yOffset * (this.spdCount - this.delay));
+        gameContext.rotate(this.angle + Math.PI / 2);
+        gameContext.drawImage(this.arrowImage, -5, -15, 10, 30);
+        gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+        gameContext.restore();
     }
 
     this.upgrade = function() {
@@ -153,6 +157,11 @@ function pageInit() {
         this.isUpgraded = true;
         this.sellPrice += this.upgradeCost * 0.6;
         upgradeButton.style.display = "none";
+        gameContext.save();
+        let upgImg = new Image();
+        upgImg.src = "images/siegeBallista_upgrade.png";
+        this.arrowTowerImage = upgImg;
+        gameContext.restore();
     }
 }
 
@@ -190,9 +199,8 @@ function LaserTower(xStart, yStart) {
                 wave[j].hp -= this.power;
                 if (wave[j].hp <= 0) {
                     money += wave[j].moneyValue;
+                    score += (5000 - wave[j].distanceTravelled);
                     wave.splice(j, 1);
-                    score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
-                        Math.pow(Math.abs(yDist), 2)));
                     randomItem();
                 }
                 this.isAttacking = true;
@@ -208,7 +216,7 @@ this.laser = function(enemyIndex) {
     gameContext.beginPath();
     gameContext.strokeStyle = "red";
     gameContext.moveTo(this.xStart + 25, this.yStart + 25);
-    gameContext.lineTo(wave[enemyIndex].xPos + 25, wave[enemyIndex].yPos + 15);
+    gameContext.lineTo(wave[enemyIndex].xPos + 25, wave[enemyIndex].yPos + 25);
     gameContext.stroke();
     gameContext.closePath();
 }
@@ -219,10 +227,13 @@ this.upgrade = function() {
     this.isUpgraded = true;
     this.sellPrice += this.upgradeCost * 0.6;
     upgradeButton.style.display = "none";
+    let upgImg = new Image();
+    upgImg.src = "images/towerDefense_laser_upgrade.png";
+    this.laserTowerImage = upgImg;
 }
 }
 
-function ArtilleryTower(xStart, yStart) {
+function CannonTower(xStart, yStart) {
     this.xStart = xStart;
     this.yStart = yStart;
     this.power = 200;
@@ -230,8 +241,10 @@ function ArtilleryTower(xStart, yStart) {
     this.spdCount = 50;
     this.delay = 50;
     this.range = 300;
-    this.artilleryTowerImage = new Image();
-    this.artilleryTowerImage.src = "images/towerDefense_artillery.png";
+    this.cannonTowerImage = new Image();
+    this.cannonTowerImage.src = "images/towerDefense_cannon.png";
+    this.cannonImage = new Image();
+    this.cannonImage.src = "images/cannon_projectile.png";
     this.sellPrice = 300;
     this.isUpgraded = false;
     this.upgradeCost = 3500;
@@ -240,7 +253,7 @@ function ArtilleryTower(xStart, yStart) {
         gameContext.save();
         gameContext.translate(this.xStart + 25, this.yStart + 25);
         gameContext.rotate(this.angle + Math.PI / 2);
-        gameContext.drawImage(this.artilleryTowerImage, -25, -25, 50, 50);
+        gameContext.drawImage(this.cannonTowerImage, -25, -25, 50, 50);
         gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
         gameContext.restore();
     }
@@ -287,9 +300,8 @@ function ArtilleryTower(xStart, yStart) {
     for (let i = 0; i < wave.length; i++) {
         if (wave[i].hp <= 0) {
             money += wave[i].moneyValue;
+            score += (5000 - wave[i].distanceTravelled);
             wave.splice(i, 1);
-            score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
-                Math.pow(Math.abs(yDist), 2)));
             randomItem();
         }
     }
@@ -301,15 +313,13 @@ this.boom = function(enemyIndex) {
     let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
     let yOffset = ((wave[enemyIndex].yPos + 15) - (centerY)) / 10;
 
-    gameContext.beginPath();
-    gameContext.moveTo(centerX + xOffset * (this.spdCount - this.delay), 
-        centerY + yOffset * (this.spdCount - this.delay));
-    gameContext.arc(centerX + xOffset * (this.spdCount - this.delay), 
-        centerY + yOffset * (this.spdCount - this.delay), 
-        20, 0, 2 * Math.PI, false);
-    gameContext.fillStyle = 'pink';
-    gameContext.fill();
-    gameContext.closePath();
+    gameContext.save();
+    gameContext.translate(this.xStart + 25  + xOffset * (this.spdCount - this.delay), 
+        this.yStart + 25 + yOffset * (this.spdCount - this.delay));
+    gameContext.rotate(this.angle + Math.PI / 2);
+    gameContext.drawImage(this.cannonImage, -15, -15, 30, 30);
+    gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+    gameContext.restore();
 }
 
 this.upgrade = function() {
@@ -318,19 +328,25 @@ this.upgrade = function() {
     this.isUpgraded = true;
     this.sellPrice += this.upgradeCost * 0.6;
     upgradeButton.style.display = "none";
+    let upgImg = new Image();
+    upgImg.src = "images/towerDefense_cannon_upgrade.png";
+    this.cannonTowerImage = upgImg;
 }
 }
 
-function CannonTower(xStart, yStart) {
+function ArtilleryTower(xStart, yStart) {
     this.xStart = xStart;
     this.yStart = yStart;
-    this.power = 100;
+    this.power = 500;
     this.isAttacking = false;
     this.spdCount = 25;
     this.delay = 25;
     this.range = 400;
-    this.cannonImage = new Image();
-    this.cannonImage.src = "images/towerDefense_cannon.png";
+    this.artilleryImage = new Image();
+    this.artilleryImage.src = "images/towerDefense_artillery.png";
+    this.artilleryShot = new Image();
+    this.artilleryShot.src = "images/artillery_projectile.png";
+    this.artilleryShot
     this.sellPrice = 210;
     this.isUpgraded = false;
     this.upgradeCost = 2000;
@@ -339,7 +355,7 @@ function CannonTower(xStart, yStart) {
         gameContext.save();
         gameContext.translate(this.xStart + 25, this.yStart + 25);
         gameContext.rotate(this.angle + Math.PI / 2);
-        gameContext.drawImage(this.cannonImage, -25, -25, 50, 50);
+        gameContext.drawImage(this.artilleryImage, -25, -25, 50, 50);
         gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
         gameContext.restore();
     }
@@ -357,15 +373,14 @@ function CannonTower(xStart, yStart) {
                 this.angle = Math.atan2(yDist, xDist);
                 if (Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
                     Math.pow(Math.abs(yDist), 2)) < this.range) {
-                    this.cannon(j);
+                    this.kapow(j);
                 if (this.spdCount === this.delay + 10) {
                     wave[j].hp -= this.power;
                 }
                 if (wave[j].hp <= 0) {
                     money += wave[j].moneyValue;
+                    score += (5000 - wave[j].distanceTravelled);
                     wave.splice(j, 1);
-                    score += Math.floor(Math.sqrt(Math.pow(Math.abs(xDist), 2) + 
-                        Math.pow(Math.abs(yDist), 2)));
                     randomItem();
                     this.isAttacking = false;
                 }
@@ -378,21 +393,19 @@ function CannonTower(xStart, yStart) {
     }
 }
 
-this.cannon = function(enemyIndex) {
+this.kapow = function(enemyIndex) {
     let centerX = this.xStart + 25;
     let centerY = this.yStart + 25;
     let xOffset = ((wave[enemyIndex].xPos + 25) - (centerX)) / 10;
     let yOffset = ((wave[enemyIndex].yPos + 15) - (centerY)) / 10;
 
-    gameContext.beginPath();
-    gameContext.moveTo(centerX + xOffset * (this.spdCount - this.delay), 
-        centerY + yOffset * (this.spdCount - this.delay));
-    gameContext.arc(centerX + xOffset * (this.spdCount - this.delay), 
-        centerY + yOffset * (this.spdCount - this.delay), 
-        10, 0, 2 * Math.PI, false);
-    gameContext.fillStyle = 'black';
-    gameContext.fill();
-    gameContext.closePath();
+    gameContext.save();
+    gameContext.translate(this.xStart + 25  + xOffset * (this.spdCount - this.delay), 
+        this.yStart + 25 + yOffset * (this.spdCount - this.delay));
+    gameContext.rotate(this.angle + Math.PI / 2);
+    gameContext.drawImage(this.artilleryShot, -15, -15, 30, 30);
+    gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+    gameContext.restore();
 }
 
 this.upgrade = function() {
@@ -401,6 +414,9 @@ this.upgrade = function() {
     this.isUpgraded = true;
     this.sellPrice += this.upgradeCost * 0.6;
     upgradeButton.style.display = "none";
+    let upgImg = new Image();
+    upgImg.src = "images/towerDefense_artillery_upgrade.png";
+    this.artilleryImage = upgImg;
 }
 }
 
@@ -408,6 +424,7 @@ function Enemy (xStart, yStart, hp, speed, image) {
     this.enemyImg = image;
     this.xPos = xStart;
     this.yPos = yStart;
+    this.maxhp = hp;
     this.hp = hp;
     this.speed = speed;
     this.moneyValue = 0;
@@ -427,10 +444,21 @@ function Enemy (xStart, yStart, hp, speed, image) {
     ]
     this.distanceTravelled = 0;
     this.negRate = false;
+    this.rotateAngle = 0;
 
     this.redraw = function() {
-        gameContext.drawImage(this.enemyImg, this.xPos, 
-            this.yPos, 50, 50);
+        gameContext.save();
+        gameContext.translate(this.xPos + 25, this.yPos + 25);
+        gameContext.rotate(this.rotateAngle);
+        gameContext.drawImage(this.enemyImg, -25, -25, 50, 50);
+        gameContext.translate((-1) * this.xStart, (-1) * this.yStart);
+        gameContext.restore();
+
+        gameContext.fillStyle = "red";
+        gameContext.fillRect(this.xPos, this.yPos + 45, 50, 5);
+        gameContext.fillStyle = "lightgreen";
+        gameContext.fillRect(this.xPos, this.yPos + 45, 50 * (this.hp / this.maxhp), 5);
+
         let xGridNum = Math.floor(this.xPos / 50);
         let yGridNum = Math.floor(this.yPos / 50);
         let rate = this.speed / slowdown;
@@ -461,6 +489,7 @@ function Enemy (xStart, yStart, hp, speed, image) {
             if (this.negRate) {
                 this.negRate = false;
             }
+            this.rotateAngle = 3 * Math.PI / 2;
         }
         else if (xGridNum + 1 < 20 && mapLayout[yGridNum][xGridNum + 1] === 'O' 
             && this.walkedPath[yGridNum][xGridNum + 1] === '') {
@@ -469,6 +498,7 @@ function Enemy (xStart, yStart, hp, speed, image) {
         if (this.negRate) {
             this.negRate = false;
         }
+        this.rotateAngle = Math.PI;
     }
     else if (yGridNum - 1 >= 0 && mapLayout[yGridNum - 1][xGridNum] === 'O' 
         && this.walkedPath[yGridNum - 1][xGridNum] === '') {
@@ -477,6 +507,7 @@ function Enemy (xStart, yStart, hp, speed, image) {
     if (!this.negRate) {
         this.negRate = true;
     }
+    this.rotateAngle = Math.PI / 2;
 }
 else if (xGridNum - 1 >= 0 && mapLayout[yGridNum][xGridNum - 1] === 'O' 
     && this.walkedPath[yGridNum][xGridNum - 1] === '') {
@@ -485,6 +516,7 @@ this.xPos -= rate;
 if (!this.negRate) {
     this.negRate = true;
 }
+this.rotateAngle = 0;
 }
 }
 }
@@ -647,19 +679,21 @@ function updateCanvas() {
 
         // scoreHeader.innerHTML = "Score: " + score;
         scoreHeader.value = score;
-        //display Score in modal.
         $('#displayScore').val('Your Score: ' + score);
+        //display Score in modal.
         lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
 
         for (let i = 0; i < inventory.length; i++) {
             inventory[i].value = "";
             inventory[i].innerHTML = "";
+            inventory[i].style.display = "none";
         }
 
         for (let i = 0; i < items.length; i++) {
             inventory[i].value = items[i];
-            inventory[i].innerHTML = items[i];
+            inventory[i].innerHTML = itemImages[parseInt(items[i])];
+            inventory[i].style.display = "inline-block";
         }
 
         if (countdown <= 0){
@@ -669,8 +703,16 @@ function updateCanvas() {
     }
 
     function createTower() {
+        clickedSquare.xPos = currSquare.xPos;
+        clickedSquare.yPos = currSquare.yPos;
+
         let buildSuccess = false;
         let moneyFlag = false;
+
+        if (countdown === "N/A" && gamePanel.tower_select.value != "") {
+            msgArea.innerHTML = "Can only build during build phase";
+            return;
+        }
 
         if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) {
             var newTower;
@@ -725,8 +767,6 @@ function updateCanvas() {
                     upgradeButton.style.display = "none";
                 }
                 sellButton.style.display = "inline-block";
-                clickedSquare.xPos = currSquare.xPos;
-                clickedSquare.yPos = currSquare.yPos;
                 msgArea.innerHTML = "Tower Built";
             }
             else {
@@ -741,7 +781,10 @@ function updateCanvas() {
         }
         else {
             if (typeof(occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) === "object") {
-                msgArea.innerHTML = "You cannot build here";
+                if (gamePanel.tower_select.value != "") {
+                    msgArea.innerHTML = "You cannot build here";
+                }
+
                 if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50].isUpgraded) {
                     upgradeButton.style.display = "inline-block";
                 }
@@ -749,8 +792,9 @@ function updateCanvas() {
                     upgradeButton.style.display = "none";
                 }
                 sellButton.style.display = "inline-block";
-                clickedSquare.xPos = currSquare.xPos;
-                clickedSquare.yPos = currSquare.yPos;
+            }
+            else if (gamePanel.tower_select.value === "") {
+                return;
             }
             else if (occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] === true
                 && gamePanel.tower_select.value !== "") {
@@ -770,39 +814,36 @@ function spawnWave () {
     let waveDelay = 0;
     let maxDelay = 0;
 
-        // let newEnemy = new Enemy(50, 0, 200, 2, enemyImg);
-
-        for (let i = 0; i < waveInfo[waveCount].length; i++) {
-            waveDelay = 0;
-            for (let j = 0; j < waveInfo[waveCount][i]; j++) {
-                let enemyImg = new Image();
-                enemyImg.src = enemyInfo[i][0];
-                let newEnemy = new Enemy(50, 0, enemyInfo[i][2], enemyInfo[i][3], enemyImg);
-                newEnemy.moneyValue = enemyInfo[i][4];
-                setTimeout(function () {wave.push(newEnemy)}, waveDelay);
-                waveDelay += enemyInfo[i][1];
-            }
-            if (waveDelay > maxDelay) {
-                maxDelay = waveDelay + 500;
-            }
+    for (let i = 0; i < waveInfo[waveCount].length; i++) {
+        waveDelay = 0;
+        for (let j = 0; j < waveInfo[waveCount][i]; j++) {
+            let enemyImg = new Image();
+            enemyImg.src = enemyInfo[i][0];
+            let newEnemy = new Enemy(50, 0, enemyInfo[i][2], enemyInfo[i][3], enemyImg);
+            newEnemy.moneyValue = enemyInfo[i][4];
+            setTimeout(function () {wave.push(newEnemy)}, waveDelay);
+            waveDelay += enemyInfo[i][1];
         }
-        
-        setTimeout(function () {doneSpawn = true}, maxDelay);
-        waveCount++;
+        if (waveDelay > maxDelay) {
+            maxDelay = waveDelay + 500;
+        }
     }
 
-    function initGame () {
-        updateInterval = setInterval(updateCanvas, 50);
-        gameCanvas.style.display = "block";
-        gamePanel.style.display = "block";
-        startButton.style.display = "none";
-        msgArea.innerHTML = "Defend your Home!!!";
-        startBuildPhase();
-    }
+    setTimeout(function () {doneSpawn = true}, maxDelay);
+    waveCount++;
+}
 
+function initGame () {
+    updateInterval = setInterval(updateCanvas, 50);
+    gameCanvas.style.display = "block";
+    gamePanel.style.display = "block";
+    startButton.style.display = "none";
+    msgArea.innerHTML = "Defend your Home!!!";
+    startBuildPhase();
+}
 
-    function gameOver () {
-        let winLoseMsg = document.getElementById('win-lose-status');
+function gameOver () {
+ let winLoseMsg = document.getElementById('win-lose-status');
         //Makes the modal undismissable when win/lose condition met.
         //Kento's code.
         $('#submitScore').modal({
@@ -853,6 +894,9 @@ function spawnWave () {
         money += towerToRemove.sellPrice;
         occupiedSpots[clickedSquare.yPos / 50][clickedSquare.xPos / 50] = false;
         towerList.splice(spliceIndex, 1);
+
+        sellButton.style.display = "none";
+        upgradeButton.style.display = "none";
     }
 
     function startBuildPhase() {
