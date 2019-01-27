@@ -16,6 +16,7 @@ function pageInit() {
     const doneBuildButton = document.getElementById("build-done");
     const submitScoreButton = document.getElementById("submit-score");
     const restartButton = document.getElementById("restart");
+    const displayScore = document.getElementById("displayScore");
     const mapLayout = [
         ['X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
         ['X', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'X'],
@@ -664,7 +665,8 @@ function pageInit() {
 
         // scoreHeader.innerHTML = "Score: " + score;
         scoreHeader.setAttribute("value", Math.floor(score));
-        $('#displayScore').val('Your Score: ' + Math.floor(score));
+        displayScore.setAttribute("value", Math.floor(score));
+
         //display Score in modal.
         lifeBar.value = life;
         moneyHeader.innerHTML = "Money: " + money;
