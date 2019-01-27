@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <?
+    <?php
     if(isset($_POST["submit_button"]))
     {
       $insertStmt = $conn->prepare("INSERT INTO player VALUES (DEFAULT, :player_name)");
