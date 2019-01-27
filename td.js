@@ -718,16 +718,16 @@ function pageInit() {
                     moneyFlag = true;
                 }
             } else if (gamePanel.tower_select.value === "3") {
-                if (money >= 500) {
-                    money -= 500;
+                if (money >= 350) {
+                    money -= 350;
                     newTower = new ArtilleryTower(currSquare.xPos, currSquare.yPos);
                     buildSuccess = true;
                 } else {
                     moneyFlag = true;
                 }
             } else if (gamePanel.tower_select.value === "4") {
-                if (money >= 350) {
-                    money -= 350;
+                if (money >= 500) {
+                    money -= 500;
                     newTower = new CannonTower(currSquare.xPos, currSquare.yPos);
                     buildSuccess = true;
                 } else {
