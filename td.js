@@ -595,12 +595,12 @@ function pageInit() {
         gameContext.fillRect(currSquare.xPos, currSquare.yPos, 50, 50);
         
         // Home
-        gameContext.fillStyle = "green";
-        gameContext.fillRect(300, 550, 50, 50);
+        gameContext.fillStyle = "rgba(0, 128, 0, 0.5)";
+        gameContext.fillRect(100, 550, 50, 50);
 
         // Spawn Spot
-        gameContext.fillStyle = "red";
-        gameContext.fillRect(300, 0, 50, 50);
+        gameContext.fillStyle = "rgba(255, 0, 0, 0.5)";
+        gameContext.fillRect(50, 0, 50, 50);
 
         // drawGrid();
 
