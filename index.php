@@ -48,7 +48,14 @@
     {
       $player = $_GET['playerName'];
       filter_var($player, FILTER_SANITIZE_SPECIAL_CHARS);
-      header("Location: td.php?status=success&player=$player");      
+      try 
+      {
+        header("Location: td.php?status=success&playerName=$player");
+      } 
+      catch(PDOException $e) 
+      {
+        echo 'PDOException: ' . $e->getMessage();
+      }                  
     }     
     ?>
 
