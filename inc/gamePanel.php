@@ -1,5 +1,7 @@
  <form id="game-panel" name="game_panel">
  	<h2>Game Panel</h2>
+  <div id="build-timer"></div>
+  <button id="build-done" type="button">Done Building</button>
  	<div id="tower-select">
  		<h3>Towers</h3>
  		<table style="text-align:left">
@@ -23,6 +25,7 @@
  			</tbody>
  		</table>
  		<button id="upgrade" type='button'>Upgrade Tower</button>
+    <button id="sell" type='button'>Sell Tower</button>
  	</div>
  	<div id="items">
  		<h3>Your Items</h3>

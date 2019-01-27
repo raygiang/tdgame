@@ -1,5 +1,5 @@
 function pageInit() {
-    const msgArea = document.getElementById("test");
+    const msgArea = document.getElementById("messages");
     const gameCanvas = document.getElementById("game-canvas");
     const gameContext = gameCanvas.getContext("2d");
     const gamePanel = document.forms.game_panel;
@@ -7,29 +7,55 @@ function pageInit() {
     const lifeBar = document.getElementById("life");
     const moneyHeader = document.getElementById("money");
     const upgradeButton = document.getElementById("upgrade");
+    const sellButton = document.getElementById("sell");
     const startButton = document.getElementById("start-button");
     const inventory = document.getElementsByClassName("items");
     const backgroundImg = new Image();
-    backgroundImg.src = "images/td-stages.png";
+    backgroundImg.src = "images/stages2.png";
+    const buildTimer = document.getElementById("build-timer");
+    const doneBuildButton = document.getElementById("build-done");
+    const submitScoreButton = document.getElementById("submit-score");
+    const restartButton = document.getElementById("restart");
     const mapLayout = [
         ['X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
-        ['X', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'X', 'X', 'O', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'X', 'X', 'X', 'O', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'O', 'O', 'O', 'O', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', 'X', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'X', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'X', 'X'],
-        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'X']
+        ['X', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'O', 'X'],
+        ['X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'X', 'O', 'X', 'X', 'X', 'O', 'O', 'O', 'X', 'X', 'O', 'X'],
+        ['X', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'O', 'O', 'O', 'X', 'X', 'X', 'X', 'X', 'O', 'O', 'X'],
+        ['X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'O', 'B', 'O', 'O', 'O', 'O', 'O', 'X', 'X'],
+        ['X', 'O', 'O', 'O', 'O', 'O', 'X', 'X', 'X', 'X', 'X', 'O', 'B', 'O', 'X', 'X', 'X', 'X', 'X', 'X'],
+        ['X', 'B', 'B', 'B', 'B', 'O', 'O', 'X', 'X', 'X', 'X', 'O', 'B', 'O', 'O', 'O', 'O', 'O', 'O', 'X'],
+        ['X', 'B', 'B', 'B', 'B', 'B', 'O', 'X', 'X', 'X', 'X', 'O', 'B', 'X', 'X', 'X', 'X', 'X', 'O', 'X'],
+        ['X', 'B', 'B', 'B', 'B', 'B', 'O', 'O', 'O', 'O', 'O', 'O', 'B', 'X', 'O', 'O', 'O', 'X', 'O', 'X'],
+        ['X', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'O', 'O', 'O', 'X', 'O', 'X', 'O', 'X'],
+        ['X', 'B', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'X', 'B', 'X', 'O', 'O', 'O', 'X'],
+        ['X', 'X', 'O', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X']
+    ]
+    // imgsrc, delay, hp, speed
+    const enemyInfo = [
+        ["images/nerd.png", 500, 300, 2, 50], 
+        ["images/lolface2.png", 500, 200, 5, 100], 
+        ["images/pogchamp.png", 5000, 50000000, 2, 10000]
+    ];
+    const waveInfo = [
+        [50, 0, 0],
+        [50, 20, 0],
+        [50, 50, 0],
+        [100, 100, 0],
+        [0, 0, 10]
     ]
 
+    var updateInterval;
     var towerList = [];
     var occupiedSpots = [];
     var wave = [];
     var items = [];
+    var countdown = 0;
+    var waveEnd = false;
+    var timerInterval;
+    var waveCount = 0;
+    var doneSpawn = false;
+    var winFlag = true;
+
     
     var currSquare = {
         xPos: 0,
@@ -58,6 +84,9 @@ function pageInit() {
         this.angle = 0;
         this.arrowTowerImage = new Image();
         this.arrowTowerImage.src = "images/siegeBallista.png";
+        this.sellPrice = 150;
+        this.isUpgraded = false;
+        this.upgradeCost = 750;
 
         this.redraw = function() {
             gameContext.save();
@@ -119,8 +148,11 @@ function pageInit() {
         }
 
         this.upgrade = function() {
-            this.power += 2;
+            this.power += 200;
             this.range += 200;
+            this.isUpgraded = true;
+            this.sellPrice += this.upgradeCost * 0.6;
+            upgradeButton.style.display = "none";
         }
     }
 
@@ -132,6 +164,9 @@ function pageInit() {
         this.range = 300;
         this.laserTowerImage = new Image();
         this.laserTowerImage.src = "images/towerDefense__laser.png";
+        this.sellPrice = 450;
+        this.isUpgraded = false;
+        this.upgradeCost = 5000;
 
         this.redraw = function() {
             gameContext.save();
@@ -177,6 +212,14 @@ function pageInit() {
             gameContext.stroke();
             gameContext.closePath();
         }
+
+        this.upgrade = function() {
+            this.power += 200;
+            this.range += 200;
+            this.isUpgraded = true;
+            this.sellPrice += this.upgradeCost * 0.6;
+            upgradeButton.style.display = "none";
+        }
     }
 
     function ArtilleryTower(xStart, yStart) {
@@ -189,6 +232,9 @@ function pageInit() {
         this.range = 300;
         this.artilleryTowerImage = new Image();
         this.artilleryTowerImage.src = "images/towerDefense_artillery.png";
+        this.sellPrice = 300;
+        this.isUpgraded = false;
+        this.upgradeCost = 3500;
 
         this.redraw = function() {
             gameContext.save();
@@ -265,6 +311,14 @@ function pageInit() {
             gameContext.fill();
             gameContext.closePath();
         }
+
+        this.upgrade = function() {
+            this.power += 200;
+            this.range += 200;
+            this.isUpgraded = true;
+            this.sellPrice += this.upgradeCost * 0.6;
+            upgradeButton.style.display = "none";
+        }
     }
 
     function CannonTower(xStart, yStart) {
@@ -277,6 +331,9 @@ function pageInit() {
         this.range = 400;
         this.cannonImage = new Image();
         this.cannonImage.src = "images/towerDefense_cannon.png";
+        this.sellPrice = 210;
+        this.isUpgraded = false;
+        this.upgradeCost = 2000;
 
         this.redraw = function() {
             gameContext.save();
@@ -337,6 +394,14 @@ function pageInit() {
             gameContext.fill();
             gameContext.closePath();
         }
+
+        this.upgrade = function() {
+            this.power += 200;
+            this.range += 200;
+            this.isUpgraded = true;
+            this.sellPrice += this.upgradeCost * 0.6;
+            upgradeButton.style.display = "none";
+        }
     }
 
     function Enemy (xStart, yStart, hp, speed, image) {
@@ -345,7 +410,7 @@ function pageInit() {
         this.yPos = yStart;
         this.hp = hp;
         this.speed = speed;
-        this.moneyValue = 50;
+        this.moneyValue = 0;
         this.walkedPath = [
             ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
             ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
@@ -360,32 +425,67 @@ function pageInit() {
             ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
             ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
         ]
+        this.distanceTravelled = 0;
+        this.negRate = false;
 
         this.redraw = function() {
-            gameContext.drawImage(this.enemyImg, this.xPos + 10, 
-                this.yPos, 30, 30);
+            gameContext.drawImage(this.enemyImg, this.xPos, 
+                this.yPos, 50, 50);
             let xGridNum = Math.floor(this.xPos / 50);
             let yGridNum = Math.floor(this.yPos / 50);
             let rate = this.speed / slowdown;
 
-            if (yGridNum + 1 < 12 && occupiedSpots[yGridNum + 1][xGridNum] === true 
-                && this.walkedPath[yGridNum + 1][xGridNum] === '') {
-                this.walkedPath[yGridNum][xGridNum] = "walked";
-                this.yPos += rate;
+            this.distanceTravelled += rate;
+
+            if (this.xPos % 50 != 0) {
+                if (this.negRate) {
+                    this.xPos -= rate;
+                }
+                else {
+                    this.xPos += rate;
+                }
             }
-            else if (xGridNum + 1 < 20 && occupiedSpots[yGridNum][xGridNum + 1] === true 
-                && this.walkedPath[yGridNum][xGridNum + 1] === '') {
-                this.walkedPath[yGridNum][xGridNum] = "walked";
-                this.xPos += rate;
-            }
-            else if (yGridNum - 1 >= 0 && occupiedSpots[yGridNum - 1][xGridNum] === true 
-                && this.walkedPath[yGridNum - 1][xGridNum] === '') {
-                this.walkedPath[yGridNum][xGridNum] = "walked";
-                this.yPos -= rate;
+            else if (this.yPos % 50 != 0) {
+                if (this.negRate) {
+                    this.yPos -= rate;
+                }
+                else {
+                    this.yPos += rate;
+                }
             }
             else {
-                this.walkedPath[yGridNum][xGridNum] = "walked";
-                this.xPos -= rate;
+                if (yGridNum + 1 < 12 && mapLayout[yGridNum + 1][xGridNum] === 'O'
+                    && this.walkedPath[yGridNum + 1][xGridNum] === '') {
+                    this.walkedPath[yGridNum][xGridNum] = "walked";
+                    this.yPos += rate;
+                    if (this.negRate) {
+                        this.negRate = false;
+                    }
+                }
+                else if (xGridNum + 1 < 20 && mapLayout[yGridNum][xGridNum + 1] === 'O' 
+                    && this.walkedPath[yGridNum][xGridNum + 1] === '') {
+                    this.walkedPath[yGridNum][xGridNum] = "walked";
+                    this.xPos += rate;
+                    if (this.negRate) {
+                        this.negRate = false;
+                    }
+                }
+                else if (yGridNum - 1 >= 0 && mapLayout[yGridNum - 1][xGridNum] === 'O' 
+                    && this.walkedPath[yGridNum - 1][xGridNum] === '') {
+                    this.walkedPath[yGridNum][xGridNum] = "walked";
+                    this.yPos -= rate;
+                    if (!this.negRate) {
+                        this.negRate = true;
+                    }
+                }
+                else if (xGridNum - 1 >= 0 && mapLayout[yGridNum][xGridNum - 1] === 'O' 
+                    && this.walkedPath[yGridNum][xGridNum - 1] === '') {
+                    this.walkedPath[yGridNum][xGridNum] = "walked";
+                    this.xPos -= rate;
+                    if (!this.negRate) {
+                        this.negRate = true;
+                    }
+                }
             }
         }
     }
@@ -460,6 +560,33 @@ function pageInit() {
     }
 
     function updateCanvas() {
+        if (waveEnd) {
+            if (waveCount === 5) {
+                gameOver();
+            };
+            startBuildPhase();
+            waveEnd = false;
+        }
+
+        if (life === 0) {
+            winFlag = false;
+            gameOver();
+        }
+
+        buildTimer.innerHTML = "Build Timer: " + countdown;
+        if (countdown > 0) {
+            doneBuildButton.style.display = "inline-block";
+        }
+        else {
+            doneBuildButton.style.display = "none";
+        }
+
+        if (doneSpawn && wave.length === 0) {
+            countdown = 30;
+            waveEnd = true;
+            doneSpawn = false;
+        }
+
         // Clear Canvas
         gameContext.drawImage(backgroundImg, 0, 0, gameCanvas.width, gameCanvas.height);
 
@@ -532,6 +659,11 @@ function pageInit() {
             inventory[i].value = items[i];
             inventory[i].innerHTML = items[i];
         }
+
+        if (countdown <= 0){
+            spawnWave();
+            countdown = "N/A";
+        }
     }
 
     function createTower() {
@@ -580,64 +712,134 @@ function pageInit() {
                     moneyFlag = true;
                 }
             }
-            if (moneyFlag === true) {
-                msgArea.innerHTML = "You don't have enough money";
-            }
 
             if (buildSuccess) {
                 towerList.push(newTower);
                 occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] = newTower;
-                upgradeButton.style.display = "inline-block";
+                if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50].isUpgraded) {
+                    upgradeButton.style.display = "inline-block";
+                }
+                else {
+                    upgradeButton.style.display = "none";
+                }
+                sellButton.style.display = "inline-block";
                 clickedSquare.xPos = currSquare.xPos;
                 clickedSquare.yPos = currSquare.yPos;
+                msgArea.innerHTML = "Tower Built";
             }
             else {
                 upgradeButton.style.display = "none";
+                sellButton.style.display = "none";
+                msgArea.innerHTML = "Defend your Home!!!";
+            }
+
+            if (moneyFlag === true) {
+                msgArea.innerHTML = "You don't have enough money";
             }
         }
         else {
             if (typeof(occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50]) === "object") {
                 msgArea.innerHTML = "You cannot build here";
-                upgradeButton.style.display = "inline-block";
+                if (!occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50].isUpgraded) {
+                    upgradeButton.style.display = "inline-block";
+                }
+                else {
+                    upgradeButton.style.display = "none";
+                }
+                sellButton.style.display = "inline-block";
                 clickedSquare.xPos = currSquare.xPos;
                 clickedSquare.yPos = currSquare.yPos;
             }
-            else if (typeof(occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] === "boolean")) {
+            else if (occupiedSpots[currSquare.yPos / 50][currSquare.xPos / 50] === true
+                && gamePanel.tower_select.value !== "") {
                 msgArea.innerHTML = "You cannot build here";
+                upgradeButton.style.display = "none";
+                sellButton.style.display = "none";
             }
             else {
                 upgradeButton.style.display = "none";
+                sellButton.style.display = "none";
             }
         }
     }
 
     function spawnWave () {
-        var waveDelay = 0;
-        var enemyImg = new Image();
-        enemyImg.src = "images/lolface2.png";
+        clearInterval(timerInterval);
+        let waveDelay = 0;
+        let maxDelay = 0;
 
-        for (let i = 0; i < 2000 ; i++) {
-            setTimeout(function () {
-                wave.push(new Enemy(50, 0, 300, 2, enemyImg));
-            }, waveDelay);
-            waveDelay += 500;
+        // let newEnemy = new Enemy(50, 0, 200, 2, enemyImg);
+
+        for (let i = 0; i < waveInfo[waveCount].length; i++) {
+            waveDelay = 0;
+            for (let j = 0; j < waveInfo[waveCount][i]; j++) {
+                let enemyImg = new Image();
+                enemyImg.src = enemyInfo[i][0];
+                let newEnemy = new Enemy(50, 0, enemyInfo[i][2], enemyInfo[i][3], enemyImg);
+                newEnemy.moneyValue = enemyInfo[i][4];
+                setTimeout(function () {wave.push(newEnemy)}, waveDelay);
+                waveDelay += enemyInfo[i][1];
+            }
+            if (waveDelay > maxDelay) {
+                maxDelay = waveDelay + 500;
+            }
         }
+        
+        setTimeout(function () {doneSpawn = true}, maxDelay);
+        waveCount++;
     }
 
     function initGame () {
-        var updateInterval = setInterval(updateCanvas, 50);
+        updateInterval = setInterval(updateCanvas, 50);
         gameCanvas.style.display = "block";
         gamePanel.style.display = "block";
         startButton.style.display = "none";
-        spawnWave();
-        setTimeout(gameOver, 1000);
-        msgArea.innerHTML = "Defend your Home!!!"
+        msgArea.innerHTML = "Defend your Home!!!";
+        startBuildPhase();
     }
 
     function gameOver () {
-        // testDiv.innerHTML = "you dead";
-        // gameCanvas.style.display = "none";
-        // gamePanel.style.display = "none";
+        if (winFlag) {
+            msgArea.innerHTML = "you winner, remaining money has been added to score";
+        }
+        else {
+            msgArea.innerHTML = "you donezo, remaining money has been added to score";
+        }
+        
+        gameCanvas.style.display = "none";
+        gamePanel.style.display = "none";
+        clearInterval(updateInterval);
+        score += money;
+        money = 0;
+        submitScoreButton.style.display = "block";
+        restartButton.style.display = "block";
+    }
+
+    function upgradeTower () {
+        let towerToUpgrade = occupiedSpots[clickedSquare.yPos / 50][clickedSquare.xPos / 50];
+
+        if (towerToUpgrade.upgradeCost > money) {
+            msgArea.innerHTML = "You need " + towerToUpgrade.upgradeCost + " money to upgrade";
+        }
+        else {
+            msgArea.innerHTML = "Tower Upgraded";
+            towerToUpgrade.upgrade();
+            money -= towerToUpgrade.upgradeCost;
+        }
+    }
+
+    function sellTower () {
+        let towerToRemove = occupiedSpots[clickedSquare.yPos / 50][clickedSquare.xPos / 50];
+        let spliceIndex = towerList.indexOf(towerToRemove);
+
+        money += towerToRemove.sellPrice;
+        occupiedSpots[clickedSquare.yPos / 50][clickedSquare.xPos / 50] = false;
+        towerList.splice(spliceIndex, 1);
+    }
+
+    function startBuildPhase() {
+        countdown = 30;
+        timerInterval = setInterval(function () {countdown -= 1;}, 1000);
     }
 
     // When the mouse moves within the canvas this function will update the
@@ -653,22 +855,23 @@ function pageInit() {
         };
     };
 
-    function startRound() {
-        let buildPhaseTimer = 60;
-        
-        setTimeout(spawnWave, 1000);
-    }
-
     for (let i = 0; i < inventory.length; i++) {
         inventory[i].onclick = useItem;
     }
 
+    submitScoreButton.style.display = "none";
+    restartButton.style.display = "none";
     upgradeButton.style.display = "none";
+    upgradeButton.onclick = upgradeTower;
+    sellButton.style.display = "none";
+    sellButton.onclick = sellTower;
     initOccupiedSpots();
     gameCanvas.onclick = createTower;
     gameCanvas.style.display = "none";
     gamePanel.style.display = "none";
     startButton.onclick = initGame;
+    doneBuildButton.onclick = function () {countdown = 0};
+    restartButton.onclick = function () {location = "index.php"};
 }
 
 window.onload = pageInit;

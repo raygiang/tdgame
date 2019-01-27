@@ -14,7 +14,7 @@
   <?php include('inc/backToScreen.php')?>
 
   <main id="main">
-    <div id="test"></div>
+    <div id="messages"></div>
     <div class="page-wrapper flex-container">
       <canvas id="game-canvas" width="1000" height="600">
         Your browser does not support the HTML5 canvas tag.
@@ -22,6 +22,8 @@
       <?php include('inc/gamePanel.php');?>
     </div>
     <button id="start-button" type="button">Start Game</button>
+    <button id="submit-score" type="button">Submit Score</button>
+    <button id="restart" type="button">Restart</button>
   </main>
   <?php include('inc/footerUI.php')?>  
   <script src="td.js" ></script>
