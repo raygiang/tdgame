@@ -10,6 +10,8 @@ function pageInit() {
     const upgradeButton = document.getElementById("upgrade");
     const startButton = document.getElementById("start-button");
     const inventory = document.getElementsByClassName("items");
+    const backgroundImg = new Image();
+    backgroundImg.src = "images/td-stages.png";
 
     var towerList = [];
     var occupiedSpots = [];
@@ -358,38 +360,40 @@ function pageInit() {
         if (items.length < 6) {
             if (Math.floor(Math.random() * (75-1) + 1) === 1) {
                 items.push("0");
-                console.log(items);
             }
             if (Math.floor(Math.random() * (50-1) + 1) === 1) {
                 items.push("1");
-                console.log(items);
             }
             if (Math.floor(Math.random() * (125-1) + 1) === 1) {
                 items.push("2");
-                console.log(items);
             }
         }
     }
 
-    function useItem(itemNum) {
-        if (itemNum === "0") {
+    function useItem() {
+        console.log(this.value);
+        if (this.value === "0") {
             life += 30;
             if (life > 100) {
                 life = 100;
             }
+            items.indexOf("0");
+            items.splice(items.indexOf("0"), 1);
         }
-        else if (itemNum === "1") {
+        else if (this.value === "1") {
             money += 100;
+            items.splice(items.indexOf("1"), 1);
         }
-        else{
+        else if (this.value === "2") {
             slowdown = 2;
             setTimeout(function () {slowdown = 1}, 10000);
+            items.splice(items.indexOf("2"), 1);
         }
     }
 
     function updateCanvas() {
         // Clear Canvas
-        gameContext.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        gameContext.drawImage(backgroundImg, 0, 0, gameCanvas.width, gameCanvas.height);
 
         // Highlight the box corresponding to the current mouse position
         gameContext.fillStyle = "lightblue";
@@ -450,6 +454,7 @@ function pageInit() {
 
         for (let i = 0; i < inventory.length; i++) {
             inventory[i].value = "";
+            inventory[i].innerHTML = "";
         }
 
         for (let i = 0; i < items.length; i++) {
@@ -543,6 +548,10 @@ function pageInit() {
         let buildPhaseTimer = 60;
         
         setTimeout(spawnWave, 1000);
+    }
+
+    for (let i = 0; i < inventory.length; i++) {
+        inventory[i].onclick = useItem;
     }
 
     upgradeButton.style.display = "none";
