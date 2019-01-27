@@ -20,8 +20,9 @@
       </canvas>
       <?php include('inc/gamePanel.php');?>
     </div>
-    <button id="start-button" type="button">Start Game</button>
-
+    <div class="col-md-12">
+      <button id="start-button" type="button">Start Game</button>      
+    </div>
     <!--    
       Moved Buttons to submitScoreModal.php
       <button id="submit-score" type="button">Submit Score</button>
