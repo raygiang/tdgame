@@ -72,3 +72,12 @@ body {
 table {
 	text-align: left;
 }
+
+#inventory {
+	margin: auto;
+}
+
+#inventory img {
+	max-width: 50px;
+	max-height: 50px;
+}

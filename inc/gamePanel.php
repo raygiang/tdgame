@@ -29,7 +29,7 @@
  	</div>
  	<div id="items">
  		<h3>Your Items</h3>
- 		<table>
+ 		<table id="inventory">
  			<tbody>
  				<tr>
  					<td><button type="button" class="items"></button></td>
