@@ -8,7 +8,7 @@
               <h2 id="win-lose-status"></h2>
               <input id="displayScore" value="" name="finalScore" disabled>
               <button type="button" id="restart">Back To Main Page</button>
-              <button type="submit" class="formDiv__button" id="submit-score" name="submitScore">Submit Score</button></a>
+              <button type="submit" class="formDiv__button" id="submit-score" name="submit-score">Submit Score</button></a>
             </form>
           </div>
         </div>
@@ -18,7 +18,7 @@
 </div>
 
 <?php
-if(isset($_POST["submitScore"]))
+if(isset($_POST["submit-score"]))
 {
   $conn->prepare("INSERT INTO player VALUES (NULL, :player_name, :score)");
   $score = $_POST['finalScore'];
