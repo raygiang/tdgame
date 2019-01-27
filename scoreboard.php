@@ -48,6 +48,9 @@
           </tbody>
         </table>    
       </div>
+      <div>
+        <button class="button">Back to Main Page</button>
+      </div>
 
     </div>
 

@@ -32,7 +32,7 @@ function pageInit() {
     ]
     // imgsrc, delay, hp, speed
     const enemyInfo = [
-        ["images/fly.png", 500, 300, 2, 50],
+        ["images/fly.png", 500, 300, 50, 50],
         ["images/bee.png", 500, 200, 5, 100],
         ["images/mouse.png", 5000, 250000, 2, 10000]
     ];
