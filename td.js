@@ -485,41 +485,41 @@ function Enemy (xStart, yStart, hp, speed, image) {
             if (yGridNum + 1 < 12 && mapLayout[yGridNum + 1][xGridNum] === 'O'
                 && this.walkedPath[yGridNum + 1][xGridNum] === '') {
                 this.walkedPath[yGridNum][xGridNum] = "walked";
-            this.yPos += rate;
-            if (this.negRate) {
-                this.negRate = false;
+                this.yPos += rate;
+                if (this.negRate) {
+                    this.negRate = false;
+                }
+                this.rotateAngle = 3 * Math.PI / 2;
             }
-            this.rotateAngle = 3 * Math.PI / 2;
+            else if (xGridNum + 1 < 20 && mapLayout[yGridNum][xGridNum + 1] === 'O' 
+                && this.walkedPath[yGridNum][xGridNum + 1] === '') {
+                this.walkedPath[yGridNum][xGridNum] = "walked";
+                this.xPos += rate;
+                if (this.negRate) {
+                    this.negRate = false;
+                }
+                this.rotateAngle = Math.PI;
+            }
+            else if (yGridNum - 1 >= 0 && mapLayout[yGridNum - 1][xGridNum] === 'O' 
+                && this.walkedPath[yGridNum - 1][xGridNum] === '') {
+                this.walkedPath[yGridNum][xGridNum] = "walked";
+                this.yPos -= rate;
+                if (!this.negRate) {
+                    this.negRate = true;
+                }
+                this.rotateAngle = Math.PI / 2;
+            }
+            else if (xGridNum - 1 >= 0 && mapLayout[yGridNum][xGridNum - 1] === 'O' 
+                && this.walkedPath[yGridNum][xGridNum - 1] === '') {
+                this.walkedPath[yGridNum][xGridNum] = "walked";
+                this.xPos -= rate;
+                if (!this.negRate) {
+                    this.negRate = true;
+                }
+                this.rotateAngle = 0;
+            }
         }
-        else if (xGridNum + 1 < 20 && mapLayout[yGridNum][xGridNum + 1] === 'O' 
-            && this.walkedPath[yGridNum][xGridNum + 1] === '') {
-            this.walkedPath[yGridNum][xGridNum] = "walked";
-        this.xPos += rate;
-        if (this.negRate) {
-            this.negRate = false;
-        }
-        this.rotateAngle = Math.PI;
     }
-    else if (yGridNum - 1 >= 0 && mapLayout[yGridNum - 1][xGridNum] === 'O' 
-        && this.walkedPath[yGridNum - 1][xGridNum] === '') {
-        this.walkedPath[yGridNum][xGridNum] = "walked";
-    this.yPos -= rate;
-    if (!this.negRate) {
-        this.negRate = true;
-    }
-    this.rotateAngle = Math.PI / 2;
-}
-else if (xGridNum - 1 >= 0 && mapLayout[yGridNum][xGridNum - 1] === 'O' 
-    && this.walkedPath[yGridNum][xGridNum - 1] === '') {
-    this.walkedPath[yGridNum][xGridNum] = "walked";
-this.xPos -= rate;
-if (!this.negRate) {
-    this.negRate = true;
-}
-this.rotateAngle = 0;
-}
-}
-}
 }
 
 function initOccupiedSpots () {
@@ -827,10 +827,10 @@ function spawnWave () {
         if (waveDelay > maxDelay) {
             maxDelay = waveDelay + 500;
         }
+        
+        setTimeout(function () {doneSpawn = true;}, maxDelay);
+        waveCount++;
     }
-
-    setTimeout(function () {doneSpawn = true}, maxDelay);
-    waveCount++;
 }
 
 function initGame () {
