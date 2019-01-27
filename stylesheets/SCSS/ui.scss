@@ -19,6 +19,12 @@ ul{
 	color: $uiFont;
 	padding: 0.1em;
 
+	#score{
+		color: inherit;
+		background-color: inherit;
+		border: none;
+	}
+
 	.button{
 		color: #fff;
 		text-transform: uppercase;

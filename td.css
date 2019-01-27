@@ -72,3 +72,9 @@ body {
 table {
 	text-align: left;
 }
+
+input {
+	color: inherit;
+	background-color: inherit;
+	border: none;
+}
