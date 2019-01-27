@@ -84,6 +84,13 @@ input {
 	margin: auto;
 }
 
+#inventory button {
+	background: transparent;
+	border: none;
+	width: 50px;
+	height: 50px;
+}
+
 #inventory img {
 	max-width: 50px;
 	max-height: 50px;
